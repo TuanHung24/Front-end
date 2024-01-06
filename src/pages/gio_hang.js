@@ -8,7 +8,7 @@ function GioHang() {
 
     useEffect(()=>{
         var items=localStorage.getItem('cartItems');
-        console.log(items);
+        
         if(items!=null)
         {
             setCartItems(JSON.parse(items));
@@ -24,7 +24,9 @@ function GioHang() {
     const gioHangUI = () => {
         if (cartItems.length > 0) {
             return (
+                
                 <div className="giohang">
+                    <h5><span>Giỏ hàng</span></h5>
                     <table className="table">
                         <thead>
                             <tr>
@@ -60,7 +62,7 @@ function GioHang() {
         }
         return <>
         <div className="giohang">
-        <img src="gio-hang/gio-hang-rong.jpg" className="img_gio_hang" alt="..."/>
+        <img src="./gio-hang/gio-hang-rong.jpg" className="img_gio_hang" alt="..."/>
         <p className="not_product">Giỏ hàng chưa có sản phẩm nào</p>
         <NavLink to="/" type="button" className="btn btn-primary th-ng">Thêm sản phẩm ngay</NavLink>
         </div></>

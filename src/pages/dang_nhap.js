@@ -1,39 +1,44 @@
 //import { NavLink } from 'react-router-dom';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import '../App';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify'; 
 
 function DangNhap() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const token = localStorage.getItem('token');
+  const navigate=useNavigate();
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/dang-nhap', {
-        method: 'POST',
+      const response = await axios.post('http://127.0.0.1:8000/api/dang-nhap',{
+          email:email,
+          password:password,
+        },{
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
           'Authorization': `Bearer ${token}`, 
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Lưu token vào local storage hoặc context để sử dụng trong ứng dụng
-        console.log('Token:', data.token);
+      if (response.status===200) {
+        const data = await response.data;
+        localStorage.setItem('token',data.token);
+        toast.success('Đăng nhập thành công!');
+        navigate('/');
+        //console.log('Token:', data.token);
       } else {
+        const data = await response.json();
         console.error('Login failed:', data.error);
+        toast.error('Đăng nhập thất bại!')
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error('Đã xảy ra lỗi!')
     }
   };
 
@@ -44,9 +49,12 @@ function DangNhap() {
                 <div className="col-12 col-md-8 col-lg-6 col-xl-6">
                     <div className="card shadow-2-strong">
                         <div className="card-body p-5 text-center">
-                            <h3 className="mb-5">Sign in</h3>
+                            <h3 className="mb-5">Đăng nhập</h3>
 
                             <div className="form-outline mb-4">
+                                <label className="form-label" htmlFor="typeEmailX-2">
+                                    Email:
+                                </label>
                                 <input
                                     type="email"
                                     id="typeEmailX-2"
@@ -55,9 +63,7 @@ function DangNhap() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                                <label className="form-label" htmlFor="typeEmailX-2">
-                                    Email
-                                </label>
+                                
                                 <div className="form-notch">
                                     <div className="form-notch-leading"></div>
                                     <div className="form-notch-middle"></div>
@@ -66,6 +72,9 @@ function DangNhap() {
                             </div>
 
                             <div className="form-outline mb-4">
+                            <label className="form-label" htmlFor="typePasswordX-2">
+                                    Mật khẩu:
+                                </label>
                                 <input
                                     type="password"
                                     name='password'
@@ -74,9 +83,7 @@ function DangNhap() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                                <label className="form-label" htmlFor="typePasswordX-2">
-                                    Password
-                                </label>
+                                
                                 <div className="form-notch">
                                     <div className="form-notch-leading"></div>
                                     <div className="form-notch-middle"></div>
@@ -101,12 +108,12 @@ function DangNhap() {
                                 type="button"
                                 onClick={handleLogin}
                             >
-                                Login
+                                Đăng nhập
                             </button>
                             <p>
-                                Don't have an account?{' '}
-                                <NavLink className="btn btn-primary btn-lg btn-block" to="/dang-ky">
-                                    Sign up
+                                Bạn chưa có tài khoản?{' '}
+                                <NavLink className="btn-lg btn-block" to="/dang-ky">
+                                    Đăng ký
                                 </NavLink>
                             </p>
                         </div>

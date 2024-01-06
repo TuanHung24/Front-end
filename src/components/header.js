@@ -1,9 +1,26 @@
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import {faBell} from '@fortawesome/free-solid-svg-icons';
+import {faBell,faUser } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from "react";
+
+
 function Header() {
- 
+
+  const [hoTen, setHoTen] = useState('');
+  const [soDienThoai, setSoDienThoai] = useState('');
+
+  useEffect(() => {
+    // Lấy thông tin từ localStorage sau khi component được render
+    const storedHoTen = localStorage.getItem('token');
+    const storedSoDienThoai = localStorage.getItem('so_dien_thoai');
+    console.log(storedHoTen);
+    if (storedHoTen && storedSoDienThoai) {
+      setHoTen(storedHoTen);
+      setSoDienThoai(storedSoDienThoai);
+    }
+  }, []);
+
   return (
     <>
     <header className="p-3 bg-dark text-white">
@@ -12,10 +29,10 @@ function Header() {
           <ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           </ul>
           
-          <div className="text-end">
+          {/* <div className="text-end">
             <NavLink to="/dang-nhap" type="button" className="btn btn-outline-light me-2">Login</NavLink>
             <NavLink to="/dang-ky" type="button" className="btn btn-warning">Sign-up</NavLink>
-          </div>
+          </div> */}
         </div>
       </div>
     </header>
@@ -47,6 +64,11 @@ function Header() {
             <input type="search" className="form-control form-control-dark" placeholder="Search..." aria-label="Search" />
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
+          <div className="login-out">
+              <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
+              <NavLink to="/dang-nhap">Đăng nhập</NavLink>|
+              <NavLink to="/dang-ky">Đăng ký</NavLink> 
+          </div>   
           <div className="d-flex align-items-center">
           
             <NavLink className="text-reset me-3" to="/gio-hang">
@@ -68,27 +90,8 @@ function Header() {
                   <NavLink className="dropdown-item" to="#">Something else here</NavLink>
                 </li>
               </ul>
-            </div>
-            
-            <div className="dropdown" id="dropdown">
-              <NavLink className="dropdown-toggle d-flex align-items-center hidden-arrow" to="#" id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" className="rounded-circle" height="25" alt="Black and White Portrait of a Man" loading="lazy"/>
-              </NavLink>
-             
+            </div> 
               
-              
-              <ul className="dropdown-menu dropdown-menu-end" id="dropdown-menu" aria-labelledby="navbarDropdownMenuAvatar">
-                <li>
-                  <NavLink className="dropdown-item" to="#">My profile</NavLink>
-                </li>
-                <li>
-                  <NavLink className="dropdown-item" to="#">Settings</NavLink>
-                </li>
-                <li>
-                  <NavLink className="dropdown-item" to="#">Logout</NavLink>
-                </li>
-              </ul>
-            </div>
           </div>
           
         </div>

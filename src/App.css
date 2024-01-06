@@ -3,22 +3,22 @@
 }
 
 .giohang{
+  margin: 15px 10% 15px 10%;
+  width: 80%;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.853);
   
 }
 .btn.btn-primary.th-ng{
-  margin: 0% 0% 2% 44%;
+  margin: 0% 0% 2% 42.6%;
 }
-#ho-ten{
-  width: 30%;
-}
-h1{
-  color:red;
-}
+
+
 .thanhtoan{
+  margin: 15px 10% 15px 10%;
+  width: 80%;
   border-radius: 20px;
-  background: #9ae0f4;
+  
 }
 .login{
   width: 40%;
@@ -45,14 +45,6 @@ h1{
 }
 #mua-hang,#thanh-toan{
   margin: 1% 0% 2% 1%;
-}
-
-#dia-chi{
-  width: 30%;
-}
-
-#dien-thoai{
-  width: 30%;
 }
 
 .cap-xoa{
@@ -101,9 +93,7 @@ form{
   }
 }
 .carousel-inner {
-  height: 550px;
-  width: auto;
-  margin: 5px;
+  margin: 5px 0px 10px 0px;
   border-radius: 20px;
 }
 .d-block.w-100
@@ -115,23 +105,33 @@ img
 {
   height: 250px;
   width: 190px;
-  
+
+}
+#img-sp{
+ margin-left: 8px;
 }
 .xem{
   color: black;
   text-decoration: none;
-  padding-left: 10%;
-  
 }
 .product{
-  text-align: center;
+  text-align: left;
   font-size: 13px;
   height: 410px;
   width: 225px;
-  margin: 1% 1% -3.5px 3.5%;
-  padding:1% 0% 1.3% 1%;
+  margin: -21.3px 0px 20px 0px;
+  padding:15px 0px 0px 0px;
   border: 1px  solid rgb(136, 136, 138);
+  padding: 10px 0px 0px 10px;
 }
+
+.products{
+  display: flex;
+  
+  margin: 40px 11% 15px 11%;
+  flex-wrap: wrap;
+}
+
 .d-block.w-50{
   margin: 10px 0px 5px 150px;
   height: 315px;
@@ -142,12 +142,6 @@ img
   width: 400px;
 }
 
-#products{
-  height: 100%;
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
 .text-white{
   text-decoration:none;
   color: #dd4b39;
@@ -211,7 +205,7 @@ body{
 }
 .img-ct{
   float: left;
-    width: 250px;
+    width: 210px;
     height: 250px;
     margin-left: 20%;
 }
@@ -250,10 +244,17 @@ body{
 .col-12.col-lg-auto.mb-3.mb-lg-0{
   width: 11%;
   display: flex;
-  margin: 0% 15%;
+}
+.login-out{
+  margin:0px 150px 0px 20px;
 }
 .my-sm-0{
   margin-left: 5px;
+}
+.tru-so-luong,.cong-so-luong{
+  padding: 5px 10px;
+  background: red;
+
 }
 .discount{
   display: flex;
@@ -265,8 +266,70 @@ body{
     font-weight: bold;
     line-height: 18px;
     margin-bottom: 5px;
-
+    margin-top: 10px;
 }
 .pb-4{
   margin-top: 2%;
+}
+
+.name{
+  margin-top: 6px;
+  
+}
+
+#gioi_thieu{
+  width: 78%;
+  margin: 15px 11.5% 15px 10.5%;
+}
+.thanh_tien{
+  margin-top: 15px;
+  margin-left: 80%;
+}
+.d-flex.flex-column.mx-auto{
+  width: 80%;
+}
+.my-3{
+  width: 250px
+}
+.h5.mb-4{
+  font-weight: 600;
+}
+.p-0{
+  list-style: none; cursor: pointer;
+}
+.page-footer.shadow{
+  border-radius: 10px;
+  background: beige;
+  height: 230px;
+}
+.d-flex.flex-wrap.justify-content-between.footer{
+  padding-top: 25px;
+  height: 230px;
+ 
+}
+.text-dark{
+  height: 200px;
+  text-decoration: none;
+}
+.p-0.dh{
+  margin-top: 50px;
+}
+.contact-footer{
+  height: 200px;
+}
+.img-logo{
+  height: 200px;
+  width: 190px;
+}
+.mo_ta{
+  border-radius: 90px;
+    background: rgb(243, 71, 100);
+    padding: 0px 10px;
+    margin-top: -20px;
+    color: black;
+    
+}
+.dung_luong{
+  padding: 4px 15px;
+  border: 1px solid;
 }

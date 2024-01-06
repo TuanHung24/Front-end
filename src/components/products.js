@@ -13,7 +13,7 @@ function Products(props)
     return(
         <>
         {/* <h3 className='ten-loai-san-pham'>{props.member.ten}</h3> */}
-        <div id='products'>{listSanPhams}</div>
+        {listSanPhams}
         </>
     )
 }

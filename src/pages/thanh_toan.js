@@ -3,12 +3,13 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { useEffect, useRef, useState } from 'react';
 function ThanhToan() {
+    
     const [cartItems,setCartItems]=useState([])
-
+    const token = localStorage.getItem('token');
     const hoTen=useRef()
     const dienThoai=useRef()
     const diaChi=useRef()
-
+    var tongTien=0;
     useEffect(()=>{
         var items=localStorage.getItem('cartItems');
         if(items!=null)
@@ -23,30 +24,54 @@ function ThanhToan() {
         setCartItems(items);
         localStorage.setItem('cartItems', JSON.stringify(items));
     }
-
+    
     const testHandler= async()=>{
         var jsonData={
             hd:[
-                {khach_hang:"Tuấn Hưng",phuong_thuc_tt:"thanh toán momo"}
-            ]
+                {
+                khach_hang:hoTen.current.value,
+                tong_tien:tongTien,
+                dia_chi:diaChi.current.value, 
+                dien_thoai:dienThoai.current.value,
+                phuong_thuc_tt:"Thanh toán khi nhận hàng"
+                }
+            ],
+            
+            cthd:cartItems.map(item=>({
+                san_pham_id: item.id,
+                so_luong: item.so_luong,
+                gia_ban: item.gia_ban,
+                thanh_tien: item.thanh_tien
+            }))
+                
+            
+            
         };
         const response=await fetch('http://127.0.0.1:8000/api/hoa-don',
         {
             method:'POST',
             headers:{
                 "Content-Type":"application/json",
+                'Authorization': `Bearer ${token}`,
             },
             body: JSON.stringify(jsonData)
         });
         var json=await response.json();
         alert(json.message);
+        thanhToanHander();
+        window.location.href = '/';
+    }
+
+    const thanhToanHander=()=>{
+        localStorage.removeItem('cartItems');
+        setCartItems([]);
     }
 
     const thanhToanUI = () => {
         if (cartItems.length > 0) {
             return (
                 <div className='thanhtoan'>
-                    <h1>Thanh toán</h1>
+                    <h5>Thanh toán</h5>
                     <table className="table">
                         <thead>
                             <tr>
@@ -61,21 +86,25 @@ function ThanhToan() {
                                 cartItems.map(function(item)
                                 {
                                     item.thanh_tien=item.so_luong*item.gia_ban;
+                                    tongTien+=item.thanh_tien;
                                     return(
                                 <tr>
-                                <th scope="row">{item.ten}</th>
+                                <td scope="row">{item.ten}</td>
                                 <td>{item.gia_ban}</td>
                                 <td>{item.so_luong}</td>
                                 <td>{item.thanh_tien}</td>
-                                <td className="cap-xoa"><button className="btn btn-danger" onClick={()=>xoaHandler(item.id)}>Xoá</button><br /></td>
+                                <td className="cap-xoa"><button className="btn btn-danger" onClick={()=>xoaHandler(item.id)}>Xoá</button></td>
                                 </tr>
+                                
                                     )
-                            
+                                        
                                 })
-                            
                             }
+                           
                         </tbody>
+                        
                     </table>
+                    <h6 className='thanh_tien'>Tổng tiền: {tongTien}đ</h6>
                 </div>
             )
         }
@@ -86,22 +115,36 @@ function ThanhToan() {
             {
                 thanhToanUI()
             }
+                <div className='thanhtoan'>
                         <div className="mb-3">
-                            <span>Thông tin người nhập hàng:</span>
+                            <h5>Thông tin người nhận hàng:</h5>
                         </div>
-                        <div className="mb-3">
-                            <label for="ho_ten" className="form-label">Họ tên:</label>
-                            <input type="text" className="form-control" id="ho-ten" ref={hoTen}/>
+
+                        <div className="row">
+                            <div className="col-md-6">
+                                <label for="ho_ten" className="form-label">Họ tên:</label>
+                                <input type="text" className="form-control" id="ho-ten" ref={hoTen}/>
+                            </div>
                         </div>
-                        <div className="mb-3" >
-                            <label for="dien_thoai" className="form-label">Điện thoại:</label>
-                            <input type="text" className="form-control" id="dien-thoai" ref={dienThoai} />
+
+                        
+                            
+                        <div className="row">
+                            <div className="col-md-6">
+                                <label for="dien_thoai" className="form-label">Điện thoại:</label>
+                                <input type="number" className="form-control" id="dien-thoai" ref={dienThoai} />
+                            </div>
                         </div>
-                        <div className="mb-3">
-                            <label for="dia_chi" className="form-label">Địa chỉ:</label>
-                            <input type="text" className="form-control" id="dia-chi" ref={diaChi}/>
+
+                        <div className="row">
+                            <div className="col-md-6">
+                                <label for="dia_chi" className="form-label">Địa chỉ:</label>
+                                <input type="text" className="form-control" id="dia-chi" ref={diaChi}/>
+                            </div>
                         </div>
-                        <div className="mb-3">
+                       
+                        
+                        <div className="col-md-6">
                             <span>Phương thức thanh toán:</span>
                         </div>
                         <div className="form-check">
@@ -122,8 +165,8 @@ function ThanhToan() {
                                 Chuyển khoản qua MoMo
                             </label>
                         </div>
-                        <button className="btn btn-warning" onClick={()=>testHandler()}>Thanh toán</button>
-                        
+                        <button className="btn btn-warning" onClick={testHandler}>Thanh toán</button>
+                        </div>
             <Footer />
         </>
     )
