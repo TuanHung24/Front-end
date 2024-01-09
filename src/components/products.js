@@ -1,4 +1,3 @@
-
 import SanPham from './product';
 function Products(props)
 {
@@ -10,10 +9,12 @@ function Products(props)
 
         );
     });
+    
     return(
         <>
-        {/* <h3 className='ten-loai-san-pham'>{props.member.ten}</h3> */}
-        {listSanPhams}
+        <div className="products">
+            {listSanPhams}
+        </div>
         </>
     )
 }

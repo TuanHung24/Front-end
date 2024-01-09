@@ -5,7 +5,7 @@ import { NavLink,useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify'; 
-
+import { ToastContainer } from 'react-toastify';
 function DangNhap() {
 
   const [email, setEmail] = useState('');
@@ -25,26 +25,47 @@ function DangNhap() {
         },
         
       });
-      if (response.status===200) {
-        const data = await response.data;
-        localStorage.setItem('token',data.token);
-        toast.success('Đăng nhập thành công!');
+      if (response.status === 200) {
+        const Dt = await response.data;
+        localStorage.setItem('token', Dt.access_token);
+        toast.success('Đăng nhập thành công!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
         navigate('/');
-        //console.log('Token:', data.token);
       } else {
-        const data = await response.json();
+        const data = await response.data;
         console.error('Login failed:', data.error);
-        toast.error('Đăng nhập thất bại!')
+        toast.error('Đăng nhập thất bại!', {
+          position: 'top-right',
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Đã xảy ra lỗi!')
+      toast.error('Đã xảy ra lỗi!', {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
 
   return (
     <>
+    <ToastContainer/>
       <div className="row d-flex justify-content-center">
                 <div className="col-12 col-md-8 col-lg-6 col-xl-6">
                     <div className="card shadow-2-strong">

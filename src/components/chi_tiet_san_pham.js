@@ -6,12 +6,19 @@ function CTSanPham(props)
 {
     const soLuong=useRef()
     const [Count,setCount]=useState(1);
+
+
+    
+
     const chonMuaHandler=()=>{
+        
         var sanPham={id:props.data.id,ten:props.data.ten,gia_ban:props.data.chi_tiet_san_pham[0].gia_ban,so_luong:parseInt(soLuong.current.value),
-            loai_san_pham:props.data.loai_san_pham.ten}
-        var cartItems =localStorage.getItem('cartItems');
-        console.log(sanPham.so_luong);
-        if(cartItems ==null)
+            loai_san_pham:props.data.loai_san_pham.ten};
+        const userId = localStorage.getItem('id');
+        
+        var cartItems = localStorage.getItem(`cartItems_${userId}`);
+        
+        if(cartItems === null)
         {
             cartItems= [sanPham]
         }
@@ -38,7 +45,7 @@ function CTSanPham(props)
             
         }
         
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
         alert('Thêm sản phẩm vào giỏ hàng thành công!');
     }
     const HandelCong=()=>{
@@ -51,7 +58,7 @@ function CTSanPham(props)
         }
     }
     const HandelTru=()=>{
-        if(Count==1 || Count<1)
+        if(Count===1 || Count<1)
         {
             setCount(1);
         }
@@ -61,6 +68,16 @@ function CTSanPham(props)
         }
         
     }
+    
+
+    const getUniqueDungLuongs = (chiTietSanPham) => {
+        const unique = new Map();
+        return chiTietSanPham.filter(item => {
+            const isUnique = !unique.has(item.dung_luong.ten);
+            unique.set(item.dung_luong.ten, true);
+            return isUnique;
+        });
+    };
     return(
         
         <>
@@ -69,6 +86,13 @@ function CTSanPham(props)
         <div className="chi-tiet">
         <img src={`http://127.0.0.1:8000/${props.data.img[0].img_url}`} alt="hinh-anh" className="img-ct"/>
         <p>Tên sản phẩm: {props.data.ten}</p>
+
+        {props.data.chi_tiet_san_pham && getUniqueDungLuongs(props.data.chi_tiet_san_pham).map((item) => (
+                            <span className="dung_luong">
+                                {item.dung_luong.ten || ''}
+                            </span>
+                            ))}
+
         <p>Giá bán: {props.data.chi_tiet_san_pham[0].gia_ban}</p>
         <p>Số lượng:<i> còn {props.data.chi_tiet_san_pham[0].so_luong}</i></p>
         <p>Tên loại sản phẩm: {props.data.loai_san_pham.ten}</p>

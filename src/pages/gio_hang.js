@@ -4,21 +4,23 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 function GioHang() {
-    const [cartItems, setCartItems] =useState([])
+      const [cartItems, setCartItems] =useState([])
+      useEffect(()=>{
+        const userId = localStorage.getItem('id');
+        const items = localStorage.getItem(`cartItems_${userId}`);
 
-    useEffect(()=>{
-        var items=localStorage.getItem('cartItems');
-        
-        if(items!=null)
-        {
+        if (items !== null) {
             setCartItems(JSON.parse(items));
         }
     },[]);
+
     const xoaHandler=(id)=>{
-        console.log('Xoa',id);
-        var items=cartItems.filter((item) => item.id !== id);
-        setCartItems(items);
-        localStorage.setItem('cartItems', JSON.stringify(items));
+        const userId = localStorage.getItem('id');
+        setCartItems((prevItems) => {
+            const updatedItems = prevItems.filter((item) => item.id !== id);
+            localStorage.setItem(`cartItems_${userId}`, JSON.stringify(updatedItems));
+            return updatedItems;
+        });
     }
 
     const gioHangUI = () => {

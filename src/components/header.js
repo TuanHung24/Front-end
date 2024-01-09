@@ -3,23 +3,61 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import {faBell,faUser } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 function Header() {
 
   const [hoTen, setHoTen] = useState('');
-  const [soDienThoai, setSoDienThoai] = useState('');
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    // Lấy thông tin từ localStorage sau khi component được render
-    const storedHoTen = localStorage.getItem('token');
-    const storedSoDienThoai = localStorage.getItem('so_dien_thoai');
-    console.log(storedHoTen);
-    if (storedHoTen && storedSoDienThoai) {
-      setHoTen(storedHoTen);
-      setSoDienThoai(storedSoDienThoai);
+    const token = localStorage.getItem('token');
+    
+   
+    if (token) {
+      setIsLoggedIn(true);
+      axiosUserInfo(token);
     }
   }, []);
+
+
+  const axiosUserInfo = async (token) => {
+    axios({
+      method: 'GET',
+      url: 'http://127.0.0.1:8000/api/me',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      setHoTen(response.data[0].ho_ten);
+      localStorage.setItem('id',response.data[0].id)
+      localStorage.setItem('ho_ten', response.data[0].ho_ten); // Ví dụ: response.data.ho_ten là tên người dùng
+    })
+    .catch(error => console.error('Error:', error));
+  };
+    
+
+  const logout = () => {
+    const token = localStorage.getItem('token');
+  
+    axios({
+      method: 'POST',
+      url: 'http://127.0.0.1:8000/api/logout',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => {
+      console.log(response.data.message);
+      // Xóa thông tin người dùng khỏi localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('ho_ten');
+      // Cập nhật trạng thái đã đăng xuất
+      setIsLoggedIn(false);
+    })
+    .catch(error => console.error('Error:', error));
+  };
 
   return (
     <>
@@ -65,10 +103,19 @@ function Header() {
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
           <div className="login-out">
-              <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
-              <NavLink to="/dang-nhap">Đăng nhập</NavLink>|
-              <NavLink to="/dang-ky">Đăng ký</NavLink> 
-          </div>   
+        {isLoggedIn ? (
+          <>
+            <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
+            <span>Xin chào, {hoTen}</span>
+            <NavLink to="/dang-nhap" onClick={logout}>Đăng xuất</NavLink>
+          </>
+        ) : (
+          <>
+            <NavLink to="/dang-nhap">Đăng nhập</NavLink>|
+            <NavLink to="/dang-ky">Đăng ký</NavLink>
+          </>
+        )}
+      </div> 
           <div className="d-flex align-items-center">
           
             <NavLink className="text-reset me-3" to="/gio-hang">

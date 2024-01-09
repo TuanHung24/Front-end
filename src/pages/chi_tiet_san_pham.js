@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import CTSanPham from "../components/chi_tiet_san_pham";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 
 function ChiTietSanPham()
 {
@@ -9,16 +10,13 @@ function ChiTietSanPham()
     useEffect (()=>{
         async function getDatFromAPI()
         {
-            var response = await fetch(`http://127.0.0.1:8000/api/san-pham/${spID}`);
-
-            var json= await response.json();
-            
-            setSanPham(json.data);
+            var response = await axios.get(`http://127.0.0.1:8000/api/san-pham/${spID}`);
+            setSanPham(response.data.data);
         }
         getDatFromAPI();
     },[]);
     const sanPhamUI=()=>{
-        if(Object.keys(sanPham).length > 0)
+        if(sanPham && Object.keys(sanPham).length > 0)
             return <CTSanPham data={sanPham}/>
         return <></>
     }

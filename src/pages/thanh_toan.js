@@ -10,19 +10,27 @@ function ThanhToan() {
     const dienThoai=useRef()
     const diaChi=useRef()
     var tongTien=0;
+
+    
+
     useEffect(()=>{
-        var items=localStorage.getItem('cartItems');
-        if(items!=null)
-        {
+       
+        const userId = localStorage.getItem('id');
+        const items = localStorage.getItem(`cartItems_${userId}`);
+
+        if (items !== null) {
             setCartItems(JSON.parse(items));
         }
     },[]);
 
     const xoaHandler=(id)=>{
-        console.log('Xoa',id);
-        var items=cartItems.filter((item) => item.id !== id);
-        setCartItems(items);
-        localStorage.setItem('cartItems', JSON.stringify(items));
+       
+        const userId = localStorage.getItem('id');
+        setCartItems((prevItems) => {
+            const updatedItems = prevItems.filter((item) => item.id !== id);
+            localStorage.setItem(`cartItems_${userId}`, JSON.stringify(updatedItems));
+            return updatedItems;
+        });
     }
     
     const testHandler= async()=>{
@@ -63,7 +71,8 @@ function ThanhToan() {
     }
 
     const thanhToanHander=()=>{
-        localStorage.removeItem('cartItems');
+        const userId = localStorage.getItem('id');
+        localStorage.removeItem(`cartItems_${userId}`);
         setCartItems([]);
     }
 
