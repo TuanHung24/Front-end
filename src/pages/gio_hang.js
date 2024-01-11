@@ -25,14 +25,15 @@ function GioHang() {
 
     const gioHangUI = () => {
         if (cartItems.length > 0) {
-            return (
-                
+            return ( 
                 <div className="giohang">
                     <h5><span>Giỏ hàng</span></h5>
                     <table className="table">
                         <thead>
                             <tr>
                                 <th scope="col">Sản phẩm</th>
+                                <th scope="col">Màu sắc</th>
+                                <th scope="col">Dung lượng</th>
                                 <th scope="col">Đơn giá</th>
                                 <th scope="col">Số lượng</th>
                                 <th scope="col">Thành tiền</th>
@@ -46,6 +47,8 @@ function GioHang() {
                                     return (
                                         <tr key={item.id}>
                                             <td>{item.ten}</td>
+                                            <td>{item.mau_sac}</td>
+                                            <td>{item.dung_luong}</td>
                                             <td>{item.gia_ban}</td>
                                             <td>{item.so_luong}</td>
                                             <td>{item.thanh_tien}</td>

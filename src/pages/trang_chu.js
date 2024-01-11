@@ -23,6 +23,7 @@ function Trangchu(){
                 const responseLoaiSP = await axios.get('http://127.0.0.1:8000/api/loai-san-pham');
                 setDSLoaiSanPham(responseLoaiSP.data.data);
                 setDSSanPham(responseLoaiSP.data.data);
+                
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
             }

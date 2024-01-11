@@ -12,7 +12,10 @@
 .btn.btn-primary.th-ng{
   margin: 0% 0% 2% 42.6%;
 }
-
+.btn.btn-danger.mua-ngay{
+  margin-left: 40%;
+  margin-right: 10px;
+}
 
 .thanhtoan{
   margin: 15px 10% 15px 10%;
@@ -251,10 +254,29 @@ body{
 .my-sm-0{
   margin-left: 5px;
 }
-.tru-so-luong,.cong-so-luong{
-  padding: 5px 10px;
-  background: red;
-
+.input-so-luong{
+  width: 50px;
+  text-align: center;
+  padding: 5px;
+}
+.tru-so-luong{
+  padding: 5px 12px;
+  background: rgb(0, 136, 255);
+  border-bottom-left-radius: 10px ;
+  border-top-left-radius: 10px;
+  width: 40px;
+  font-size: 19px;
+  font-weight: 900;
+  border: 1px solid rgb(0, 136, 255);
+}
+.cong-so-luong{
+  padding: 5px 12px;
+  background: rgb(0, 136, 255);
+  font-size: 19px;
+  font-weight: 900;
+  border: 1px solid rgb(0, 136, 255);
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
 }
 .discount{
   display: flex;
@@ -329,9 +351,23 @@ body{
     color: black;
     
 }
+.dung_luong.selected {
+  border: 2px solid rgb(0, 32, 128); /* hoặc màu xanh yêu thích của bạn */
+}
+.mau_sac.selected {
+  border: 2px solid rgb(0, 32, 128); /* hoặc màu xanh bạn chọn */
+}
 .dung_luong{
-  padding: 4px 15px;
+  padding: 7px 10px;
   border: 1px solid;
+  margin-right: 5px;
+  
+}
+.mau_sac{
+  padding: 7px 10px;
+  border: 1px solid;
+  margin-right: 5px;
+  
 }
 .ten-loai{
   text-decoration: none;

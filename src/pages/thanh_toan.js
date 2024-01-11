@@ -11,8 +11,6 @@ function ThanhToan() {
     const diaChi=useRef()
     var tongTien=0;
 
-    
-
     useEffect(()=>{
        
         const userId = localStorage.getItem('id');
@@ -85,6 +83,8 @@ function ThanhToan() {
                         <thead>
                             <tr>
                                 <th scope="col">Sản phẩm</th>
+                                <th scope="col">Màu sắc</th>
+                                <th scope="col">Dung lượng</th>
                                 <th scope="col">Đơn giá</th>
                                 <th scope="col">Số lượng</th>
                                 <th scope="col">Thành tiền</th>
@@ -99,6 +99,8 @@ function ThanhToan() {
                                     return(
                                 <tr>
                                 <td scope="row">{item.ten}</td>
+                                <td>{item.mau_sac}</td>
+                                <td>{item.dung_luong}</td>
                                 <td>{item.gia_ban}</td>
                                 <td>{item.so_luong}</td>
                                 <td>{item.thanh_tien}</td>

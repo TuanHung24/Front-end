@@ -78,7 +78,7 @@ function Product(props)
                             <h6 className="name">{props.member.ten}</h6>
                             {props.member.chi_tiet_san_pham && getUniqueDungLuongs(props.member.chi_tiet_san_pham).map((item) => (
                             <span className="dung_luong">
-                                {item.dung_luong?.ten || ''}
+                                {item.dung_luong?.ten+"GB" || ''}
                             </span>
                             ))}
                             <strong className="price">{selectedPriceMin}₫ - {selectedPriceMax}₫  </strong>
