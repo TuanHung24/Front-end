@@ -13,7 +13,7 @@ function GioHang() {
             setCartItems(JSON.parse(items));
         }
     },[]);
-
+    
     const xoaHandler=(id)=>{
         const userId = localStorage.getItem('id');
         setCartItems((prevItems) => {

@@ -16,6 +16,7 @@ import DangNhap from "./pages/dang_nhap";
 import ChiTietSanPham from "./pages/chi_tiet_san_pham";
 import ListProductType from "./pages/list_product_type";
 import 'react-toastify/dist/ReactToastify.css';
+import DonHang from "./pages/don_hang";
 //import Products from "./components/products";
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
     <Route path="/gioi-thieu" element={<GioiThieu/>}/>
     <Route path="/thanh-toan" element={<ThanhToan/>}/>
     <Route path="/gio-hang" element={<GioHang/>}/>
+    <Route path="/don-hang" element={<DonHang/>}/>
     <Route path="/dang-ky" element={<DangKy/>}/>
     <Route path="/dang-nhap" element={<DangNhap/>}/>
     <Route path="/san-pham/:spID" element={<ChiTietSanPham/>}/>

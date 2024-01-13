@@ -3,6 +3,7 @@
 }
 
 .giohang{
+  min-height: 400px;
   margin: 15px 10% 15px 10%;
   width: 80%;
   border-radius: 20px;
@@ -198,7 +199,9 @@ body{
     transform: rotate(360deg);
   }
 }
-
+.logout{
+  margin-left: 5px;
+}
 .card.shadow-2-strong{
   border-radius: 1rem;
 }
@@ -302,6 +305,7 @@ body{
 #gioi_thieu{
   width: 78%;
   margin: 15px 11.5% 15px 10.5%;
+  line-height: 35px;
 }
 .thanh_tien{
   margin-top: 15px;

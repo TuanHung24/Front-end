@@ -8,7 +8,7 @@ import axios from "axios";
 
 function Header() {
 
-  const [hoTen, setHoTen] = useState('');
+  const [hoTen, setHoTen] = useState(localStorage.getItem('ho_ten')|| null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -33,6 +33,8 @@ function Header() {
       setHoTen(response.data[0].ho_ten);
       localStorage.setItem('id',response.data[0].id)
       localStorage.setItem('ho_ten', response.data[0].ho_ten); // Ví dụ: response.data.ho_ten là tên người dùng
+      localStorage.setItem('dien_thoai', response.data[0].dien_thoai);
+
     })
     .catch(error => console.error('Error:', error));
   };
@@ -53,12 +55,12 @@ function Header() {
       // Xóa thông tin người dùng khỏi localStorage
       localStorage.removeItem('token');
       localStorage.removeItem('ho_ten');
+      localStorage.removeItem('dien_thoai');
       // Cập nhật trạng thái đã đăng xuất
       setIsLoggedIn(false);
     })
     .catch(error => console.error('Error:', error));
   };
-
   return (
     <>
     <header className="p-3 bg-dark text-white">
@@ -100,14 +102,14 @@ function Header() {
         
           <form className="col-12 col-lg-auto mb-3 mb-lg-0">
             <input type="search" className="form-control form-control-dark" placeholder="Search..." aria-label="Search" />
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
           <div className="login-out">
         {isLoggedIn ? (
           <>
             <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
             <span>Xin chào, {hoTen}</span>
-            <NavLink to="/dang-nhap" onClick={logout}>Đăng xuất</NavLink>
+            <NavLink to="/dang-nhap" className="logout" onClick={logout}>Đăng xuất</NavLink>
           </>
         ) : (
           <>
@@ -121,23 +123,13 @@ function Header() {
             <NavLink className="text-reset me-3" to="/gio-hang">
               <FontAwesomeIcon icon={faCartShopping} size="2x" className="mr-4"/>
             </NavLink>
-            <div className="dropdown">
-              <NavLink className="text-reset me-3 dropdown-toggle hidden-arrow"  id="navbarDropdownMenuLink" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
+            
+              <NavLink className="text-reset me-3" to='/don-hang'>
                 <FontAwesomeIcon icon={faBell} size="2x" className="ml-2"/>
                 <span className="badge rounded-pill badge-notification bg-danger">1</span>
               </NavLink>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                <li>
-                  <NavLink className="dropdown-item" to="#" >Some news</NavLink>
-                </li>
-                <li>
-                  <NavLink className="dropdown-item" to="#">Another news</NavLink>
-                </li>
-                <li>
-                  <NavLink className="dropdown-item" to="#">Something else here</NavLink>
-                </li>
-              </ul>
-            </div> 
+              
+            
               
           </div>
           

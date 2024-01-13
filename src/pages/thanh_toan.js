@@ -2,9 +2,10 @@ import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import Header from "../components/header";
 import Footer from "../components/footer";
 import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 function ThanhToan() {
-    
     const [cartItems,setCartItems]=useState([])
+   
     const token = localStorage.getItem('token');
     const hoTen=useRef()
     const dienThoai=useRef()
@@ -31,49 +32,67 @@ function ThanhToan() {
         });
     }
     
-    const testHandler= async()=>{
-        var jsonData={
-            hd:[
-                {
-                khach_hang:hoTen.current.value,
-                tong_tien:tongTien,
-                dia_chi:diaChi.current.value, 
-                dien_thoai:dienThoai.current.value,
-                phuong_thuc_tt:"Thanh toán khi nhận hàng"
-                }
-            ],
-            
-            cthd:cartItems.map(item=>({
-                san_pham_id: item.id,
-                so_luong: item.so_luong,
-                gia_ban: item.gia_ban,
-                thanh_tien: item.thanh_tien
-            }))
-                
-            
-            
-        };
-        const response=await fetch('http://127.0.0.1:8000/api/hoa-don',
-        {
-            method:'POST',
-            headers:{
-                "Content-Type":"application/json",
-                'Authorization': `Bearer ${token}`,
-            },
-            body: JSON.stringify(jsonData)
-        });
-        var json=await response.json();
-        alert(json.message);
-        thanhToanHander();
-        window.location.href = '/';
-    }
+    
+    
+    
 
-    const thanhToanHander=()=>{
+    const thanhToanHander = () => {
         const userId = localStorage.getItem('id');
+        // Lấy danh sách đơn hàng cũ từ localStorage
+        const savedOrders = localStorage.getItem(`orderItems_${userId}`);
+        let orders = savedOrders ? JSON.parse(savedOrders) : [];
+    
+        // Thêm các mục trong cartItems vào danh sách đơn hàng
+        orders = [...orders, ...cartItems];
+        
+        // Lưu danh sách đơn hàng đã cập nhật vào localStorage
+        localStorage.setItem(`orderItems_${userId}`, JSON.stringify(orders));
+        
+        // Xóa cartItems khỏi localStorage và cập nhật state
         localStorage.removeItem(`cartItems_${userId}`);
         setCartItems([]);
     }
 
+
+    const testHandler = async () => {
+        try {
+            var jsonData = {
+                hd: [
+                    {
+                        khach_hang: hoTen.current.value,
+                        tong_tien: tongTien,
+                        dia_chi: diaChi.current.value, 
+                        dien_thoai: dienThoai.current.value,
+                        phuong_thuc_tt: "Thanh toán khi nhận hàng"
+                    }
+                ],
+                cthd: cartItems.map(item => ({
+                    san_pham_id: item.id,
+                    mau_sac_id:item.mau_sac_id,
+                    dung_luong_id:item.dung_luong_id,
+                    so_luong: item.so_luong,
+                    gia_ban: item.gia_ban,
+                    thanh_tien: item.thanh_tien
+                }))
+            };
+    
+            const response = await axios.post('http://127.0.0.1:8000/api/hoa-don', jsonData, {
+                headers: {
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            alert(response.data.message);
+            thanhToanHander();
+            window.location.href = '/';
+        } catch (error) {
+            // Xử lý lỗi tại đây
+            console.error("Có lỗi xảy ra:", error);
+            alert("Có lỗi khi gửi dữ liệu!");
+        }
+    }
+    console.log(cartItems)
     const thanhToanUI = () => {
         if (cartItems.length > 0) {
             return (
@@ -134,7 +153,7 @@ function ThanhToan() {
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="ho_ten" className="form-label">Họ tên:</label>
-                                <input type="text" className="form-control" id="ho-ten" ref={hoTen}/>
+                                <input type="text" className="form-control" id="ho-ten" ref={hoTen} value={localStorage.getItem('ho_ten')} />
                             </div>
                         </div>
 
@@ -143,14 +162,14 @@ function ThanhToan() {
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="dien_thoai" className="form-label">Điện thoại:</label>
-                                <input type="number" className="form-control" id="dien-thoai" ref={dienThoai} />
+                                <input type="number" className="form-control" id="dien-thoai" ref={dienThoai} value={localStorage.getItem('dien_thoai')} />
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="dia_chi" className="form-label">Địa chỉ:</label>
-                                <input type="text" className="form-control" id="dia-chi" ref={diaChi}/>
+                                <input type="text" className="form-control" id="dia-chi" ref={diaChi} />
                             </div>
                         </div>
                        

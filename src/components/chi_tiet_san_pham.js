@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 function CTSanPham(props)
 {
-    const soLuong=useRef()
+    
     const [Count,setCount]=useState(1);
 
     const [tonKho, setTonKho] = useState(0);
@@ -22,7 +22,6 @@ function CTSanPham(props)
             setTonKho(defaultTonKho);
         }
     }, [props.data.chi_tiet_san_pham]);
-
 
     const handleMauSacClick = (mauSac) => {
         setSelectedMauSac(mauSac);
@@ -45,50 +44,36 @@ function CTSanPham(props)
             alert('Không tìm thấy chi tiết sản phẩm!');
             return;
         }
-    
-        var sanPham = {
-            id: chiTietSanPhamSelected.id,
+       
+        const sanPham = {
+            id: chiTietSanPhamSelected.san_pham_id,
             ten: props.data.ten,
             gia_ban: chiTietSanPhamSelected.gia_ban,
-            so_luong: parseInt(soLuong.current.value),
+            so_luong: Count,
             dung_luong: chiTietSanPhamSelected.dung_luong.ten,
             dung_luong_id: chiTietSanPhamSelected.dung_luong.id,
             mau_sac: chiTietSanPhamSelected.mau_sac.ten,
             mau_sac_id: chiTietSanPhamSelected.mau_sac.id,
         };
-        
+    
         const userId = localStorage.getItem('id');
-        
-        var cartItems = localStorage.getItem(`cartItems_${userId}`);
-        
-        if(cartItems === null)
-        {
-            cartItems= [sanPham]
-        }
-        else
-        {
-            cartItems=JSON.parse(cartItems);
-            var i=0;
-            
-            for(;i<cartItems.length;i++)
-            {
-                if(cartItems[i].id === sanPham.id )
-                {
-                    cartItems[i].so_luong+=sanPham.so_luong;
-                    break;
-                }
-                else{
-                    alert('Vui lòng nhập số lượng!');
-                    break;
-                }
-            }
-            if(i === cartItems.length)
-            {
+        let cartItems = localStorage.getItem(`cartItems_${userId}`);
+    
+        if (cartItems === null) {
+            cartItems = [sanPham];
+        } else {
+            cartItems = JSON.parse(cartItems);
+            const existingItemIndex = cartItems.findIndex(item => item.id === sanPham.id);
+    
+            if (existingItemIndex !== -1) {
+                // Nếu sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng
+                cartItems[existingItemIndex].so_luong += sanPham.so_luong;
+            } else {
+                // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới vào mảng
                 cartItems.push(sanPham);
             }
-            
         }
-        
+    
         localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
         alert('Thêm sản phẩm vào giỏ hàng thành công!');
     }
@@ -179,7 +164,7 @@ function CTSanPham(props)
                 <p className="quantity">
                     Số lượng:
                     <button className="tru-so-luong" onClick={HandelTru}>-</button>
-                    <input type="number" className="input-so-luong" value={Count} ref={soLuong} readOnly/>
+                    <input type="number" className="input-so-luong" value={Count} readOnly/>
                     <button className="cong-so-luong" onClick={HandelCong}>+</button>
                 </p>
                 
