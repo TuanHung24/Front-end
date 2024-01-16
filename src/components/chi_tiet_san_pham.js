@@ -2,6 +2,7 @@ import Header from "./header";
 import Footer from "./footer";
 import { NavLink } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import numeral from 'numeral';
 function CTSanPham(props)
 {
     
@@ -34,7 +35,7 @@ function CTSanPham(props)
             setCount(1); 
         }
     };
-
+    
     const chonMuaHandler=()=>{
         
         const chiTietSanPhamSelected = props.data.chi_tiet_san_pham.find(item =>
@@ -48,22 +49,27 @@ function CTSanPham(props)
         const sanPham = {
             id: chiTietSanPhamSelected.san_pham_id,
             ten: props.data.ten,
+            img:props.data.img[0].img_url,
             gia_ban: chiTietSanPhamSelected.gia_ban,
             so_luong: Count,
             dung_luong: chiTietSanPhamSelected.dung_luong.ten,
             dung_luong_id: chiTietSanPhamSelected.dung_luong.id,
             mau_sac: chiTietSanPhamSelected.mau_sac.ten,
             mau_sac_id: chiTietSanPhamSelected.mau_sac.id,
+            
         };
-    
+        
         const userId = localStorage.getItem('id');
         let cartItems = localStorage.getItem(`cartItems_${userId}`);
-    
+        
         if (cartItems === null) {
             cartItems = [sanPham];
         } else {
             cartItems = JSON.parse(cartItems);
-            const existingItemIndex = cartItems.findIndex(item => item.id === sanPham.id);
+            const existingItemIndex = cartItems.findIndex(item => 
+                item.id === sanPham.id && 
+                item.dung_luong_id === sanPham.dung_luong_id && 
+                item.mau_sac_id === sanPham.mau_sac_id);
     
             if (existingItemIndex !== -1) {
                 // Nếu sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng
@@ -77,7 +83,22 @@ function CTSanPham(props)
         localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
         alert('Thêm sản phẩm vào giỏ hàng thành công!');
     }
-
+    if (!numeral.locales['vi-custom']) {
+        numeral.register('locale', 'vi-custom', {
+          delimiters: {
+            thousands: '.',
+            decimal: ',',
+          },
+          currency: {
+            symbol: '',
+          },
+        });
+      }
+      numeral.locale('vi-custom');
+      
+     
+      
+        
     const HandelCong = () => {
         if (Count < tonKho) {
             setCount(Count + 1);
@@ -130,7 +151,7 @@ function CTSanPham(props)
        
         <Header/>
         <div className="chi-tiet">
-                <img src={`http://127.0.0.1:8000/${props.data.img[0].img_url}`} alt="hinh-anh" className="img-ct" />
+                <img src={`http://127.0.0.1:8000/${props.data.img[0]?.img_url}`} alt="hinh-anh" className="img-ct" />
                 <p>Tên sản phẩm: {props.data.ten}</p>
 
                 {getUniqueDungLuongs(props.data.chi_tiet_san_pham).map((item) => (

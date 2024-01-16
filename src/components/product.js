@@ -72,7 +72,7 @@ function Product(props)
                 <div className="product-container">
                     <NavLink to={`/san-pham/${props.member.id}`} className="xem">
                         
-                        <div className="product">
+                        <div className="detail-product">
                             <img src={`http://127.0.0.1:8000/${props.member.img[0]?.img_url}`} id="img-sp" /><br />
                             <span className="mo_ta">%{props.member.mo_ta}</span>
                             <h6 className="name">{props.member.ten}</h6>
@@ -81,7 +81,12 @@ function Product(props)
                                 {item.dung_luong?.ten+"GB" || ''}
                             </span>
                             ))}
+                           {selectedPriceMax === selectedPriceMin?(
+                                <strong className="price">{selectedPriceMin}₫ </strong>
+                              ):(
                             <strong className="price">{selectedPriceMin}₫ - {selectedPriceMax}₫  </strong>
+                              )
+                            }
                         </div>
                     </NavLink>
                 </div>

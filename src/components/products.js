@@ -11,11 +11,9 @@ function Products(props)
     });
     
     return(
-        <>
-        <div className="products">
+        <div id="list-product">
             {listSanPhams}
         </div>
-        </>
     )
 }
 

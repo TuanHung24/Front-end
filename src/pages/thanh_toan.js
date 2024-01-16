@@ -3,6 +3,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import numeral from 'numeral';
 function ThanhToan() {
     const [cartItems,setCartItems]=useState([])
    
@@ -10,7 +11,7 @@ function ThanhToan() {
     const hoTen=useRef()
     const dienThoai=useRef()
     const diaChi=useRef()
-    var tongTien=0;
+    
 
     useEffect(()=>{
        
@@ -22,38 +23,66 @@ function ThanhToan() {
         }
     },[]);
 
-    const xoaHandler=(id)=>{
-       
+    const xoaHandler = (id, dung_luong_id, mau_sac_id) => {
         const userId = localStorage.getItem('id');
         setCartItems((prevItems) => {
-            const updatedItems = prevItems.filter((item) => item.id !== id);
+            const updatedItems = prevItems.filter(item => 
+                !(item.id === id && item.dung_luong_id === dung_luong_id && item.mau_sac_id === mau_sac_id));
             localStorage.setItem(`cartItems_${userId}`, JSON.stringify(updatedItems));
             return updatedItems;
         });
-    }
+    };
     
-    
-    
-    
+    const [tongTien,setTongTien]=useState(0);
 
-    const thanhToanHander = () => {
+    if (!numeral.locales['vi-custom']) {
+        numeral.register('locale', 'vi-custom', {
+          delimiters: {
+            thousands: '.',
+            decimal: ',',
+          },
+          currency: {
+            symbol: '',
+          },
+        });
+      }
+      numeral.locale('vi-custom');
+      
+      const formatSoTien = (soTien) => {
+        const so = parseFloat(soTien);
+        return numeral(so).format('0,0');
+    }
+      
+    useEffect(() => {
+        let tong = 0;
+        cartItems.forEach(item => {
+            tong += item.so_luong * item.gia_ban;
+        });
+        setTongTien(tong);
+    }, [cartItems]);
+
+    const thanhToanHander = async (orderId) => {
         const userId = localStorage.getItem('id');
-        // Lấy danh sách đơn hàng cũ từ localStorage
-        const savedOrders = localStorage.getItem(`orderItems_${userId}`);
-        let orders = savedOrders ? JSON.parse(savedOrders) : [];
-    
-        // Thêm các mục trong cartItems vào danh sách đơn hàng
-        orders = [...orders, ...cartItems];
+             // Thay thế bằng trường ID thực tế của hóa đơn
+            const savedOrderItems = localStorage.getItem(`orderItems_${userId}`);
+            let orderItems = savedOrderItems ? JSON.parse(savedOrderItems) : [];
+            
+            // Tạo một hóa đơn mới với các sản phẩm từ cartItems
+            const newOrder = {
+                orderId: orderId,
+                items: cartItems.map(item => ({ ...item, order_id: orderId }))
+            };
+            orderItems.push(newOrder);
+
         
-        // Lưu danh sách đơn hàng đã cập nhật vào localStorage
-        localStorage.setItem(`orderItems_${userId}`, JSON.stringify(orders));
-        
-        // Xóa cartItems khỏi localStorage và cập nhật state
-        localStorage.removeItem(`cartItems_${userId}`);
+            // Lưu danh sách đơn hàng đã cập nhật vào localStorage
+            localStorage.setItem(`orderItems_${userId}`, JSON.stringify(orderItems));
+
+            localStorage.removeItem(`cartItems_${userId}`);
         setCartItems([]);
     }
-
-
+    
+    
     const testHandler = async () => {
         try {
             var jsonData = {
@@ -74,8 +103,8 @@ function ThanhToan() {
                     gia_ban: item.gia_ban,
                     thanh_tien: item.thanh_tien
                 }))
-            };
-    
+            }; 
+            console.log(jsonData)
             const response = await axios.post('http://127.0.0.1:8000/api/hoa-don', jsonData, {
                 headers: {
                     "Content-Type": "application/json",
@@ -84,15 +113,15 @@ function ThanhToan() {
             });
             
             alert(response.data.message);
-            thanhToanHander();
-            window.location.href = '/';
+            thanhToanHander(response.data.order_id);
+            window.location.href = '/don-hang';
         } catch (error) {
             // Xử lý lỗi tại đây
             console.error("Có lỗi xảy ra:", error);
             alert("Có lỗi khi gửi dữ liệu!");
         }
     }
-    console.log(cartItems)
+    
     const thanhToanUI = () => {
         if (cartItems.length > 0) {
             return (
@@ -113,17 +142,16 @@ function ThanhToan() {
                             {
                                 cartItems.map(function(item)
                                 {
-                                    item.thanh_tien=item.so_luong*item.gia_ban;
-                                    tongTien+=item.thanh_tien;
+                                    item.thanh_tien=item.gia_ban*item.so_luong;
                                     return(
                                 <tr>
                                 <td scope="row">{item.ten}</td>
                                 <td>{item.mau_sac}</td>
                                 <td>{item.dung_luong}</td>
-                                <td>{item.gia_ban}</td>
+                                <td>{formatSoTien(item.gia_ban)}</td>
                                 <td>{item.so_luong}</td>
-                                <td>{item.thanh_tien}</td>
-                                <td className="cap-xoa"><button className="btn btn-danger" onClick={()=>xoaHandler(item.id)}>Xoá</button></td>
+                                <td>{formatSoTien(item.thanh_tien)}</td>
+                                <td className="cap-xoa"><button className="btn btn-danger" onClick={()=>xoaHandler(item.id, item.dung_luong_id, item.mau_sac_id)}>Xoá</button></td>
                                 </tr>
                                 
                                     )
@@ -134,7 +162,7 @@ function ThanhToan() {
                         </tbody>
                         
                     </table>
-                    <h6 className='thanh_tien'>Tổng tiền: {tongTien}đ</h6>
+                    <h6 className='thanh_tien'>Tổng tiền: {formatSoTien(tongTien)}đ</h6>
                 </div>
             )
         }

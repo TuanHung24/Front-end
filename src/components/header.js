@@ -1,14 +1,14 @@
 import { NavLink} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import {faBell,faUser } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
+import {faUser } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 
 function Header() {
 
-  const [hoTen, setHoTen] = useState(localStorage.getItem('ho_ten')|| null);
+  const [tenTaiKhoan, setTenTaiKhoan] = useState(localStorage.getItem('ten_tai_khoan')|| null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,7 +19,7 @@ function Header() {
       axiosUserInfo(token);
     }
   }, []);
-
+  
 
   const axiosUserInfo = async (token) => {
     axios({
@@ -30,16 +30,19 @@ function Header() {
       }
     })
     .then(response => {
-      setHoTen(response.data[0].ho_ten);
+      setTenTaiKhoan(response.data[0].ten_dang_nhap);
       localStorage.setItem('id',response.data[0].id)
-      localStorage.setItem('ho_ten', response.data[0].ho_ten); // Ví dụ: response.data.ho_ten là tên người dùng
+      localStorage.setItem('ho_ten', response.data[0].ho_ten);
+    
       localStorage.setItem('dien_thoai', response.data[0].dien_thoai);
-
+      localStorage.setItem('ten_tai_khoan',response.data[0].ten_dang_nhap);
+      localStorage.setItem('email', response.data[0].email);
+      localStorage.setItem('dia_chi',response.data[0].dia_chi);
+      
     })
     .catch(error => console.error('Error:', error));
   };
     
-
   const logout = () => {
     const token = localStorage.getItem('token');
   
@@ -108,7 +111,7 @@ function Header() {
         {isLoggedIn ? (
           <>
             <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
-            <span>Xin chào, {hoTen}</span>
+            <span>Xin chào, <NavLink to="/info" className="info-name">{tenTaiKhoan}</NavLink></span>
             <NavLink to="/dang-nhap" className="logout" onClick={logout}>Đăng xuất</NavLink>
           </>
         ) : (
@@ -125,7 +128,7 @@ function Header() {
             </NavLink>
             
               <NavLink className="text-reset me-3" to='/don-hang'>
-                <FontAwesomeIcon icon={faBell} size="2x" className="ml-2"/>
+                <FontAwesomeIcon icon={faShoppingBag} size="2x" className="ml-2"/>
                 <span className="badge rounded-pill badge-notification bg-danger">1</span>
               </NavLink>
               

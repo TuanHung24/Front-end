@@ -1,6 +1,5 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Products from "../components/products";
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 
@@ -10,6 +9,7 @@ import axios from "axios";
 import ListBanner from "./list_banner";
 import { NavLink } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
+import Product from "../components/product";
 
 
 function Trangchu(){
@@ -22,7 +22,18 @@ function Trangchu(){
             try {
                 const responseLoaiSP = await axios.get('http://127.0.0.1:8000/api/loai-san-pham');
                 setDSLoaiSanPham(responseLoaiSP.data.data);
-                setDSSanPham(responseLoaiSP.data.data);
+            } catch (error) {
+                console.error('Error:', error.response ? error.response.data : error.message);
+            }
+        }
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseSanPham = await axios.get('http://127.0.0.1:8000/api/san-pham');
+                setDSSanPham(responseSanPham.data.data);
                 
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
@@ -44,7 +55,7 @@ function Trangchu(){
             <ToastContainer />
             </div>
             <body id="body">
-                <div className="products">
+                <div className="products-type">
                     {
                         dsLoaiSanPham.map((item) => (
                         <>
@@ -56,9 +67,11 @@ function Trangchu(){
                         ))
                     }
                 </div>
+                <div id="list-product">
                 {dsSanPham.map((item) => (
-                    <Products key={item.id} member={item}/>
+                    <Product key={item.id} member={item}/>
                 ))}
+                </div>
             </body>
             <Footer/>
         </>

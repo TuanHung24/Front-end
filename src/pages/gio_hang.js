@@ -14,15 +14,15 @@ function GioHang() {
         }
     },[]);
     
-    const xoaHandler=(id)=>{
+    const xoaHandler = (id, dung_luong_id, mau_sac_id) => {
         const userId = localStorage.getItem('id');
         setCartItems((prevItems) => {
-            const updatedItems = prevItems.filter((item) => item.id !== id);
+            const updatedItems = prevItems.filter(item => 
+                !(item.id === id && item.dung_luong_id === dung_luong_id && item.mau_sac_id === mau_sac_id));
             localStorage.setItem(`cartItems_${userId}`, JSON.stringify(updatedItems));
             return updatedItems;
         });
-    }
-
+    };
     const gioHangUI = () => {
         if (cartItems.length > 0) {
             return ( 
@@ -31,6 +31,7 @@ function GioHang() {
                     <table className="table">
                         <thead>
                             <tr>
+                                <th scope="col">Hình ảnh</th>
                                 <th scope="col">Sản phẩm</th>
                                 <th scope="col">Màu sắc</th>
                                 <th scope="col">Dung lượng</th>
@@ -39,20 +40,21 @@ function GioHang() {
                                 <th scope="col">Thành tiền</th>
                             </tr>
                         </thead>
-                        <tbody className="table-group-divider">
+                        <tbody className="table-group-divider" id="table-gio-hang">
                             {
                                 cartItems.map(function(item)
                                 {
                                     item.thanh_tien=item.gia_ban*item.so_luong;
                                     return (
                                         <tr key={item.id}>
+                                            <img src={`http://127.0.0.1:8000/${item.img}`} alt="hinh-anh" className="img-gio-hang" />
                                             <td>{item.ten}</td>
                                             <td>{item.mau_sac}</td>
                                             <td>{item.dung_luong}</td>
                                             <td>{item.gia_ban}</td>
                                             <td>{item.so_luong}</td>
                                             <td>{item.thanh_tien}</td>
-                                            <td className="cap-xoa"><button onClick={() => xoaHandler(item.id)} className="btn btn-danger">Xoá</button></td>
+                                            <td className="cap-xoa"><button onClick={() => xoaHandler(item.id, item.dung_luong_id, item.mau_sac_id)} className="btn btn-danger">Xoá</button></td>
                                         </tr>
                                     )
                                 })

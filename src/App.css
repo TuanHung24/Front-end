@@ -3,12 +3,17 @@
 }
 
 .giohang{
-  min-height: 400px;
+  min-height: 600px;
   margin: 15px 10% 15px 10%;
   width: 80%;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.853);
   
+}
+.don_hang{
+  margin-left: 10%;
+  width: 80%;
+  margin-bottom: 40px;
 }
 .btn.btn-primary.th-ng{
   margin: 0% 0% 2% 42.6%;
@@ -17,8 +22,11 @@
   margin-left: 40%;
   margin-right: 10px;
 }
-
-.thanhtoan{
+.info-name.active,.info-name{
+ text-decoration: none;
+ color: black;
+}
+.thanhtoan,.thong-tin{
   margin: 15px 10% 15px 10%;
   width: 80%;
   border-radius: 20px;
@@ -51,8 +59,8 @@
   margin: 1% 0% 2% 1%;
 }
 
-.cap-xoa{
-  display: inline-flex;
+#table-gio-hang {
+  vertical-align: middle;
 }
 
 form{
@@ -112,7 +120,11 @@ img
 
 }
 #img-sp{
- margin-left: 8px;
+ margin-left: 13px;
+}
+.img-gio-hang{
+  height: 200px;
+  width: 150px;
 }
 .xem{
   color: black;
@@ -123,19 +135,32 @@ img
   font-size: 13px;
   height: 410px;
   width: 225px;
-  margin: -21.3px 0px 20px 0px;
-  padding:15px 0px 0px 0px;
   border: 1px  solid rgb(136, 136, 138);
-  padding: 10px 0px 0px 10px;
+}
+.detail-product{
+  margin: 2px;
+  margin-left: 4px;
 }
 
-.products{
+.products-type{
   display: flex;
-  
-  margin: 40px 11% 15px 11%;
+  margin-left: 11%;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
+#list-product{
+  margin-left: 10.3%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: 10%;
+  margin-bottom: 20px;
+}
+.product-container{
 
+  border: 1px  solid rgb(136, 136, 138);
+  width: 230px; /* Chia đều 5 sản phẩm trên mỗi hàng */
+  
+}
 .d-block.w-50{
   margin: 10px 0px 5px 150px;
   height: 315px;
@@ -200,6 +225,14 @@ body{
   }
 }
 .logout{
+  
+    padding: 5px;
+    background: orange;
+    color: black;
+    text-decoration: none;
+    
+    
+    border-radius: 4px;
   margin-left: 5px;
 }
 .card.shadow-2-strong{
@@ -310,6 +343,7 @@ body{
 .thanh_tien{
   margin-top: 15px;
   margin-left: 80%;
+  color: red;
 }
 .d-flex.flex-column.mx-auto{
   width: 80%;
@@ -380,4 +414,27 @@ body{
   border: 1px solid rgb(87, 83, 83);
   padding: 5px 20px;
   border-radius: 20px;
+}
+.parameter{
+  width: 540px;
+  margin-left: 50%;
+}
+.parameter__title{
+  margin-left: 52%;
+  font-size: 24px;
+  font-weight: 700;
+  
+}
+.productdetail_list{
+  display: flex;
+  padding-top: 10px;
+  vertical-align: middle;
+ 
+}
+.parameter__list li:nth-child(odd) {
+  background-color: #f5f5f5;
+  
+}
+.parameter__list .lileft {
+  width: 140px;
 }
