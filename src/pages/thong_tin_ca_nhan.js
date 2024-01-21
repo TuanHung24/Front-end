@@ -3,12 +3,17 @@ import Footer from "../components/footer";
 import Header from "../components/header";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import withAuth from './withAuth';
 function ThongTinCaNhan() {
     const navigate = useNavigate();
     const [hoTen, setHoTen] = useState(localStorage.getItem('ho_ten'));
     const [dienThoai, setDienThoai] = useState(localStorage.getItem('dien_thoai'));
     const [diaChi, setDiaChi] = useState(localStorage.getItem('dia_chi'));
+    
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [newPassword1, setNewPassword1] = useState("");
+
     const Email = localStorage.getItem('email');
     const tenDangNhap = localStorage.getItem('ten_tai_khoan');
 
@@ -36,6 +41,46 @@ function ThongTinCaNhan() {
             alert("Có lỗi xảy ra khi cập nhật thông tin.");
         }
     };
+    const changePassword = async () => {
+        if (!oldPassword || !newPassword || !newPassword1) {
+            alert("Vui lòng nhập đầy đủ thông tin.");
+            return;
+        }
+    
+        if (newPassword !== newPassword1) {
+            alert("Mật khẩu mới và xác nhận mật khẩu mới không khớp.");
+            return;
+        }
+    
+        try {
+            const token = localStorage.getItem('token');
+            const Email=localStorage.getItem('email');
+
+            const data = {
+                oldPassword: oldPassword,
+                newPassword: newPassword,
+                email:Email
+            };
+    
+            const response = await axios.post('http://127.0.0.1:8000/api/doi-mat-khau', data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+    
+            alert(response.data.message);
+    
+            setOldPassword("");
+            setNewPassword("");
+            setNewPassword1("");
+    
+        } catch (error) {
+            console.error('Lỗi:', error);
+            alert("Có lỗi xảy ra khi đổi mật khẩu.");
+        }
+    };
+    
+   
     
     return (
         <>
@@ -81,8 +126,30 @@ function ThongTinCaNhan() {
                 </div><br />
                 <button className="btn btn-primary" onClick={upDateInfo}>Cập nhật thông tin</button>
             </div>
+            <div className="doi-mat-khau">
+                <h5 className="offset-md-8">Thay đổi mật khẩu</h5>
+                <div className="row">
+                    <div className="col-md-3 offset-md-7">
+                        <label htmlFor="old-password" className="form-label">Mật khẩu cũ:</label>
+                        <input type="password" className="form-control" id="old-password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3 offset-md-7" >
+                        <label htmlFor="new-password" className="form-label">Mật khẩu mới:</label>
+                        <input type="password" className="form-control" id="new-password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-3 offset-md-7">
+                        <label htmlFor="new-password1" className="form-label">Mật khẩu mới:</label>
+                        <input type="password" className="form-control" id="new-password1" value={newPassword1} onChange={(e) => setNewPassword1(e.target.value)} />
+                    </div>
+                </div><br/>
+                <button className="btn btn-primary offset-md-8" onClick={changePassword}>Thay đổi mật khẩu</button>
+                </div>
             <Footer />
         </>
     )
     }
-export default ThongTinCaNhan;    
+export default withAuth(ThongTinCaNhan);    

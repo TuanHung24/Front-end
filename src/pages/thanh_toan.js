@@ -4,9 +4,12 @@ import Footer from "../components/footer";
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
+import withAuth from './withAuth';
 function ThanhToan() {
     const [cartItems,setCartItems]=useState([])
-   
+    const [HoTen,setHoTen]=useState([]);
+    const [DienThoai,setDienThoai]=useState([]);
+    const [DiaChi, setDiaChi]=useState([]);
     const token = localStorage.getItem('token');
     const hoTen=useRef()
     const dienThoai=useRef()
@@ -17,7 +20,9 @@ function ThanhToan() {
        
         const userId = localStorage.getItem('id');
         const items = localStorage.getItem(`cartItems_${userId}`);
-
+        setHoTen(localStorage.getItem('ho_ten'))
+        setDienThoai(localStorage.getItem('dien_thoai'))
+        setDiaChi(localStorage.getItem('dia_chi'))
         if (items !== null) {
             setCartItems(JSON.parse(items));
         }
@@ -88,7 +93,7 @@ function ThanhToan() {
             var jsonData = {
                 hd: [
                     {
-                        khach_hang: hoTen.current.value,
+                        khach_hang_id: localStorage.getItem('id'),
                         tong_tien: tongTien,
                         dia_chi: diaChi.current.value, 
                         dien_thoai: dienThoai.current.value,
@@ -104,7 +109,7 @@ function ThanhToan() {
                     thanh_tien: item.thanh_tien
                 }))
             }; 
-            console.log(jsonData)
+           
             const response = await axios.post('http://127.0.0.1:8000/api/hoa-don', jsonData, {
                 headers: {
                     "Content-Type": "application/json",
@@ -181,7 +186,7 @@ function ThanhToan() {
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="ho_ten" className="form-label">Họ tên:</label>
-                                <input type="text" className="form-control" id="ho-ten" ref={hoTen} value={localStorage.getItem('ho_ten')} />
+                                <input type="text" className="form-control" id="ho-ten" ref={hoTen} value={HoTen} onChange={(e)=>setHoTen(e.target.value)}/>
                             </div>
                         </div>
 
@@ -190,14 +195,14 @@ function ThanhToan() {
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="dien_thoai" className="form-label">Điện thoại:</label>
-                                <input type="number" className="form-control" id="dien-thoai" ref={dienThoai} value={localStorage.getItem('dien_thoai')} />
+                                <input type="number" className="form-control" id="dien-thoai" ref={dienThoai} value={DienThoai} onChange={(e)=>setDienThoai(e.target.value)}/>
                             </div>
                         </div>
 
                         <div className="row">
                             <div className="col-md-6">
                                 <label for="dia_chi" className="form-label">Địa chỉ:</label>
-                                <input type="text" className="form-control" id="dia-chi" ref={diaChi} />
+                                <input type="text" className="form-control" id="dia-chi" ref={diaChi} value={DiaChi} onChange={(e)=>setDiaChi(e.target.value)}/>
                             </div>
                         </div>
                        
@@ -208,7 +213,7 @@ function ThanhToan() {
                         <div className="form-check">
                             <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked />
                             <label className="form-check-label" for="flexRadioDefault1">
-                                COD
+                                Thanh toán khi nhận hàng
                             </label>
                         </div>
                         <div className="form-check">
@@ -230,4 +235,4 @@ function ThanhToan() {
     )
 }
 
-export default ThanhToan;
+export default withAuth(ThanhToan);

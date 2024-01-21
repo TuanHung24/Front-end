@@ -1,17 +1,20 @@
 import Header from "./header";
 import Footer from "./footer";
 import { NavLink } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import numeral from 'numeral';
+import 'chart.js/auto';
+import CommentSection from "./comment_section";
 function CTSanPham(props)
 {
     
     const [Count,setCount]=useState(1);
-
+    const token = localStorage.getItem('token');
+    const [danhGia, setDanhGia] = useState(props.data.danh_gia);
     const [tonKho, setTonKho] = useState(0);
     const [selectedDungLuong, setSelectedDungLuong] = useState(null);
     const [selectedMauSac, setSelectedMauSac] = useState(null);
-
+    const [binhLuan,setBinhLuan]=useState([]);
     useEffect(() => {
         
         if (props.data.chi_tiet_san_pham.length > 0) {
@@ -22,8 +25,15 @@ function CTSanPham(props)
             setSelectedMauSac(defaultMauSac);
             setTonKho(defaultTonKho);
         }
+
     }, [props.data.chi_tiet_san_pham]);
 
+    
+    useEffect(() => {
+            setBinhLuan(props.data.binh_luan);
+    }, [props.data.binh_luan]);
+
+    
     const handleMauSacClick = (mauSac) => {
         setSelectedMauSac(mauSac);
     
@@ -35,9 +45,98 @@ function CTSanPham(props)
             setCount(1); 
         }
     };
+
+
+    useEffect(() => {
+        const danhGiaProps = props.data?.danh_gia || [];
+        setDanhGia(danhGiaProps);
+      }, [props.data]);
+
+    const thongKeSoSao = () => {
+        const thongKe = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     
+        danhGia.forEach((danhGiaItem) => {
+          thongKe[danhGiaItem.so_sao]++;
+        });
+    
+         return Object.values(thongKe);;
+      };
+    
+
+
+
+    const themVaoGioHandler=()=>{
+        const chiTietSanPhamSelected = props.data.chi_tiet_san_pham.find(item =>
+            item.dung_luong.ten === selectedDungLuong && item.mau_sac.ten === selectedMauSac);
+    
+        if (!chiTietSanPhamSelected) {
+            alert('Không tìm thấy chi tiết sản phẩm!');
+            return;
+        }
+
+        const sanPham = {
+            id: chiTietSanPhamSelected.san_pham_id,
+            ten: props.data.ten,
+            img:props.data.img[0].img_url,
+            gia_ban: chiTietSanPhamSelected.gia_ban,
+            so_luong: Count,
+            dung_luong: chiTietSanPhamSelected.dung_luong.ten,
+            dung_luong_id: chiTietSanPhamSelected.dung_luong.id,
+            mau_sac: chiTietSanPhamSelected.mau_sac.ten,
+            mau_sac_id: chiTietSanPhamSelected.mau_sac.id,
+            
+        };
+
+
+        const userId = localStorage.getItem('id');
+        let cartItems = localStorage.getItem(`cartItems_${userId}`);
+        
+        if (cartItems === null) {
+            cartItems = [sanPham];
+        } else {
+            cartItems = JSON.parse(cartItems);
+            const existingItemIndex = cartItems.findIndex(item => 
+                item.id === sanPham.id && 
+                item.dung_luong_id === sanPham.dung_luong_id && 
+                item.mau_sac_id === sanPham.mau_sac_id);
+    
+            if (existingItemIndex !== -1) {
+                // Nếu sản phẩm đã tồn tại trong giỏ hàng, cập nhật số lượng
+                cartItems[existingItemIndex].so_luong += sanPham.so_luong;
+            } else {
+                // Nếu sản phẩm chưa có trong giỏ hàng, thêm mới vào mảng
+                cartItems.push(sanPham);
+            }
+        }
+    
+        localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
+        alert('Thêm sản phẩm vào giỏ hàng thành công!');
+    }
+
+
+    const renderThongKe = () => {
+        const thongKe = thongKeSoSao();
+    
+        return (
+          <>
+            <h3>Đánh giá:</h3>
+            <ul>
+              {Object.keys(thongKe).map((sao) => (
+                <li key={sao}>
+                  {parseInt(sao,10)+1} sao: {thongKe[sao]} người đánh giá
+                </li>
+              ))}
+            </ul>
+          </>
+        );
+      };
+
     const chonMuaHandler=()=>{
         
+        if (!token) {
+            alert('Vui lòng đăng nhập để mua hàng!');
+            return;
+        }
         const chiTietSanPhamSelected = props.data.chi_tiet_san_pham.find(item =>
             item.dung_luong.ten === selectedDungLuong && item.mau_sac.ten === selectedMauSac);
     
@@ -81,8 +180,9 @@ function CTSanPham(props)
         }
     
         localStorage.setItem(`cartItems_${userId}`, JSON.stringify(cartItems));
-        alert('Thêm sản phẩm vào giỏ hàng thành công!');
+        
     }
+    
     if (!numeral.locales['vi-custom']) {
         numeral.register('locale', 'vi-custom', {
           delimiters: {
@@ -145,14 +245,16 @@ function CTSanPham(props)
             setCount(1);
         }
     };
+   
     return(
         
         <>
        
         <Header/>
+        
         <div className="chi-tiet">
                 <img src={`http://127.0.0.1:8000/${props.data.img[0]?.img_url}`} alt="hinh-anh" className="img-ct" />
-                <p>Tên sản phẩm: {props.data.ten}</p>
+                <p className="ct-ten-sp">{props.data.ten}</p>
 
                 {getUniqueDungLuongs(props.data.chi_tiet_san_pham).map((item) => (
                     <span
@@ -180,20 +282,110 @@ function CTSanPham(props)
                 <p>Giá bán: {props.data.chi_tiet_san_pham
                     .find(item => item.dung_luong.ten === selectedDungLuong)?.gia_ban}</p>
                 <p>Số lượng:<i> còn {tonKho}</i></p>
-                <p>Tên loại sản phẩm: {props.data.loai_san_pham.ten}</p>
                 
                 <p className="quantity">
                     Số lượng:
-                    <button className="tru-so-luong" onClick={HandelTru}>-</button>
-                    <input type="number" className="input-so-luong" value={Count} readOnly/>
-                    <button className="cong-so-luong" onClick={HandelCong}>+</button>
+                    
+                        <button className="tru-so-luong" onClick={HandelTru}>-</button>
+                        <input type="number" className="input-so-luong" value={Count} readOnly/>
+                        <button className="cong-so-luong" onClick={HandelCong}>+</button>
+                    
                 </p>
+                {token ?( 
+                    <>
+                            <NavLink to={`/thanh-toan`} onClick={chonMuaHandler} className="btn btn-danger mua-ngay">Mua ngay</NavLink>
+                    </>
+                ):(
+                    <>
+                            <button onClick={chonMuaHandler} className="btn btn-danger mua-ngay">Mua ngay</button>
+                    </>
+                )
+                }
                 
-                <NavLink to={`/thanh-toan`} onClick={chonMuaHandler} className="btn btn-danger mua-ngay">Mua ngay</NavLink>
-                <button onClick={chonMuaHandler} className="btn btn-primary them-vao-gio">Thêm vào giỏ hàng</button>
+                <button onClick={themVaoGioHandler} className="btn btn-primary them-vao-gio">Thêm vào giỏ hàng</button>
             </div>
+            
+            
+            <div className="parameter">
+               
+                <div className="danh-gia">
+                <div>{renderThongKe()}</div>
+                    
+                </div>
+                <div className="binh-luan col-md-8">
+                   
+                        
+                        {binhLuan && <CommentSection binhLuan={binhLuan} />}               
+                        
+                    
+                        
+                    
+                </div>
+                    <ul className="parameter__list">
+                    <h5>Thông tin sản phẩm:</h5>
+                            <li className="productdetail_list">
+                                <p className="lileft">Màn hình:</p>
+                                <div className="liright">
+                                    <span class="">{props.data.thong_tin_san_pham.man_hinh} inch</span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Hệ điều hành:</p>
+                                <div class="liright">
+                                    <span class="">{props.data.thong_tin_san_pham.he_dieu_hanh}</span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Camera:</p>
+                                <div class="liright">
+                                            <span class="">{props.data.thong_tin_san_pham.camera} </span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">RAM:</p>
+                                <div class="liright">
+                                            <span class="">{props.data.thong_tin_san_pham.ram} GB</span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Dung lượng:</p>
+                                <div class="liright">
+                                            <span class="">{selectedDungLuong} GB</span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Kích thước:</p>
+                                <div class="liright">
+                                            <span class="comma">{props.data.thong_tin_san_pham.kich_thuoc}</span>
+                                           
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Pin:</p>
+                                <div class="liright">
+                                            <span class="comma">{props.data.thong_tin_san_pham.pin} mAh</span>
+                                            
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Trọng lượng:</p>
+                                <div class="liright">
+                                            <span class="">{props.data.thong_tin_san_pham.trong_luong} g</span>
+                                </div>
+                            </li>
+                            <li className="productdetail_list">
+                                <p class="lileft">Hãng</p>
+                                <div class="liright">
+                                            <span class="">{props.data.loai_san_pham.ten}</span>
+                                </div>
+                            </li>
+                    </ul>
+            
+    </div>
         <Footer/>
         </>
     )
 }
 export default CTSanPham;
+
+

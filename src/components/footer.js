@@ -10,9 +10,9 @@ function Footer() {
           <div className="d-flex flex-column mx-auto">
             <div className="d-flex flex-wrap justify-content-between footer">
               <div className="contact-footer">
-                <a href="/#" className="d-flex align-items-center p-0 text-dark">
+                {/* <a href="/#" className="d-flex align-items-center p-0 text-dark">
                   <img alt="logo" className="img-logo" src="../img/logo.png"/>
-                </a>
+                </a> */}
               </div>
               <div className="contact-footer">
                 <p className="h5 mb-4">Về chúng tôi</p>

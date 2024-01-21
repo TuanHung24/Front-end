@@ -2,17 +2,28 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
 function GioHang() {
       const [cartItems, setCartItems] =useState([])
+      const token=localStorage.getItem('token');
       useEffect(()=>{
         const userId = localStorage.getItem('id');
         const items = localStorage.getItem(`cartItems_${userId}`);
-
+        
         if (items !== null) {
             setCartItems(JSON.parse(items));
         }
     },[]);
+
+    const thanhToanHandler=()=>{
+        
+            alert('Vui lòng đăng nhập để thanh toán!');
+            return;
+        
+    }
+
     
     const xoaHandler = (id, dung_luong_id, mau_sac_id) => {
         const userId = localStorage.getItem('id');
@@ -61,15 +72,28 @@ function GioHang() {
                             }
                         </tbody>
                     </table>
-                    <div>
-                        <NavLink className="btn btn-primary" id="thanh-toan" to="/thanh-toan">Thanh toán</NavLink>
-                    </div>
+                    {token ? (
+                    
+                        
+                            <>
+                                <NavLink className="btn btn-primary" id="thanh-toan" to="/thanh-toan">Thanh toán</NavLink>
+                            </>
+                        ):(
+                            <>
+                                <button  onClick={thanhToanHandler} className="btn btn-primary" id="thanh-toan" >Thanh toán</button>
+                            </>
+                        )
+
+                        
+                        
+                    
+                    }
                 </div>
             )
         }
         return <>
         <div className="giohang">
-        <img src="./gio-hang/gio-hang-rong.jpg" className="img_gio_hang" alt="..."/>
+        <FontAwesomeIcon icon={faCartShopping} className="cart_shoping"/>
         <p className="not_product">Giỏ hàng chưa có sản phẩm nào</p>
         <NavLink to="/" type="button" className="btn btn-primary th-ng">Thêm sản phẩm ngay</NavLink>
         </div></>

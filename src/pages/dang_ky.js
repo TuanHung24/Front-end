@@ -11,6 +11,7 @@ function DangKy() {
     const tenDangNhap=useRef();
     const matKhau=useRef();
     const soDienThoai=useRef();
+    const diaChi=useRef();
     const navigate=useNavigate();
 
     const handleRegister = async () => {
@@ -20,7 +21,8 @@ function DangKy() {
               mat_khau:matKhau.current.value,
               ho_ten:hoTen.current.value,
               ten_dang_nhap:tenDangNhap.current.value,
-              so_dien_thoai:soDienThoai.current.value
+              dien_thoai:soDienThoai.current.value,
+              dia_chi:diaChi.current.value
             },{
             headers: {
               'Content-Type': 'application/json',
@@ -31,14 +33,7 @@ function DangKy() {
           if (response.status === 200) {
             const Dt = await response.data;
             localStorage.setItem('token', Dt.access_token);
-            toast.success('Đăng ký thành công!', {
-              position: 'top-right',
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-            });
+            alert(response.data.message)
             navigate('/dang-nhap');
           } else {
             const data = await response.data;
@@ -82,24 +77,28 @@ function DangKy() {
                                     <div className="form-notch"><div className="form-notch-leading" ></div><div className="form-notch-middle" ></div><div className="form-notch-trailing"></div></div></div>
 
                                 <div className="form-outline mb-4">
-                                    <label className="form-label" for="form3Example3cg">Email:</label>
-                                    <input type="email" id="form3Example3cg" ref={Email} className="form-control form-control-lg" />
+                                    <label className="form-label" for="form3Example2cg">Email:</label>
+                                    <input type="email" id="form3Example2cg" ref={Email} className="form-control form-control-lg" />
 
                                     <div className="form-notch"><div className="form-notch-leading"></div><div className="form-notch-middle"></div><div className="form-notch-trailing"></div></div></div>
+                                <div className="form-outline mb-4">
+                                    <label className="form-label" for="form3Example3cg">Địa chỉ:</label>
+                                    <input type="text" id="form3Example3cg" ref={diaChi} className="form-control form-control-lg" />
 
+                                    <div className="form-notch"><div className="form-notch-leading"></div><div className="form-notch-middle"></div><div className="form-notch-trailing"></div></div></div>
                                 <div className="form-outline mb-4">
                                     <label className="form-label" for="form3Example4cg">Số điện thoại:</label>
-                                    <input type="text" id="form3Example4cg" ref={soDienThoai} className="form-control form-control-lg" />
+                                    <input type="number" id="form3Example4cg" ref={soDienThoai} className="form-control form-control-lg" />
                                     <div className="form-notch"><div className="form-notch-leading"></div><div className="form-notch-middle"></div><div className="form-notch-trailing"></div></div></div>
 
                                 <div className="form-outline mb-4">
-                                    <label className="form-label" for="form3Example4cg">Tên tài khoản:</label>
-                                    <input type="text" id="form3Example4cg" ref={tenDangNhap} className="form-control form-control-lg" />
+                                    <label className="form-label" for="form3Example6cg">Tên tài khoản:</label>
+                                    <input type="text" id="form3Example6cg" ref={tenDangNhap} className="form-control form-control-lg" />
                                     <div className="form-notch"><div className="form-notch-leading"></div><div className="form-notch-middle"></div><div className="form-notch-trailing"></div></div></div>
 
                                 <div className="form-outline mb-4">
-                                    <label className="form-label" for="form3Example4cdg">Mật khẩu:</label>
-                                    <input type="password" id="form3Example4cdg" ref={matKhau} className="form-control form-control-lg" />
+                                    <label className="form-label" for="form3Example5cdg">Mật khẩu:</label>
+                                    <input type="password" id="form3Example5cdg" ref={matKhau} className="form-control form-control-lg" />
                                     <div className="form-notch"><div className="form-notch-leading"></div><div className="form-notch-middle">
                                     </div><div className="form-notch-trailing"></div></div></div>
                                 <div className="d-flex justify-content-center">

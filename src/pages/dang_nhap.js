@@ -132,7 +132,11 @@ function DangNhap() {
                             >
                                 Đăng nhập
                             </button>
+                           
                             <p>
+                                <NavLink className="btn-lg btn-block" to="/">
+                                    Trang chủ
+                                </NavLink>{'  '}
                                 Bạn chưa có tài khoản?{' '}
                                 <NavLink className="btn-lg btn-block" to="/dang-ky">
                                     Đăng ký

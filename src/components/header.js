@@ -4,12 +4,15 @@ import { faCartShopping, faShoppingBag } from '@fortawesome/free-solid-svg-icons
 import {faUser } from '@fortawesome/free-solid-svg-icons';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Products from "./products";
 
 
 function Header() {
 
   const [tenTaiKhoan, setTenTaiKhoan] = useState(localStorage.getItem('ten_tai_khoan')|| null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dsSanPham, setDSSanPham] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem('token');
     
@@ -20,7 +23,17 @@ function Header() {
     }
   }, []);
   
-
+  const handleSearch = async (searchTerm) => {
+    
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/san-pham/tim-ten/${searchTerm}`);
+      console.log(response.data.data)
+      setDSSanPham(response.data.data);
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm:', error);
+    }
+  };
+  
   const axiosUserInfo = async (token) => {
     axios({
       method: 'GET',
@@ -30,6 +43,7 @@ function Header() {
       }
     })
     .then(response => {
+
       setTenTaiKhoan(response.data[0].ten_dang_nhap);
       localStorage.setItem('id',response.data[0].id)
       localStorage.setItem('ho_ten', response.data[0].ho_ten);
@@ -54,16 +68,23 @@ function Header() {
       }
     })
     .then(response => {
-      console.log(response.data.message);
-      // Xóa thông tin người dùng khỏi localStorage
+      alert(response.data.message);
+     
       localStorage.removeItem('token');
       localStorage.removeItem('ho_ten');
       localStorage.removeItem('dien_thoai');
-      // Cập nhật trạng thái đã đăng xuất
-      setIsLoggedIn(false);
+      localStorage.removeItem('id');
+      localStorage.removeItem('email');
+      localStorage.removeItem('dia_chi');
+      localStorage.removeItem('ten_tai_khoan');
+      
+      setIsLoggedIn(false); 
+
+      
     })
     .catch(error => console.error('Error:', error));
   };
+  console.log(isLoggedIn)
   return (
     <>
     <header className="p-3 bg-dark text-white">
@@ -104,9 +125,17 @@ function Header() {
           </div>
         
           <form className="col-12 col-lg-auto mb-3 mb-lg-0">
-            <input type="search" className="form-control form-control-dark" placeholder="Search..." aria-label="Search" />
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          <input
+              type="search"
+              className="form-control form-control-dark"
+              placeholder="Search..."
+              aria-label="Search"
+              />
+            <button className="btn btn-outline-success my-2 my-sm-0" onClick={()=>handleSearch(searchTerm)}>
+              Search
+            </button>
           </form>
+
           <div className="login-out">
         {isLoggedIn ? (
           <>
@@ -120,7 +149,9 @@ function Header() {
             <NavLink to="/dang-ky">Đăng ký</NavLink>
           </>
         )}
-      </div> 
+      </div>
+      {isLoggedIn ? (
+        <>
           <div className="d-flex align-items-center">
           
             <NavLink className="text-reset me-3" to="/gio-hang">
@@ -131,13 +162,28 @@ function Header() {
                 <FontAwesomeIcon icon={faShoppingBag} size="2x" className="ml-2"/>
                 <span className="badge rounded-pill badge-notification bg-danger">1</span>
               </NavLink>
-              
+               </div>
+            </>
+              ):(
+
+                <>
+                <div className="d-flex align-items-center">
+                  <NavLink className="text-reset me-3" to="/gio-hang">
+                    <FontAwesomeIcon icon={faCartShopping} size="2x" className="mr-4"/>
+                  </NavLink>
+                </div>
+                  </>
+
+              )
+        }
             
               
-          </div>
+         
           
         </div>
-        
+        {dsSanPham.map((item) => (
+                    <Products key={item.id} member={item}/>
+                ))}
       </nav>
     </section>
     
