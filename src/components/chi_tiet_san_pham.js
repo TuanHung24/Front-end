@@ -5,9 +5,14 @@ import { useEffect, useState } from "react";
 import numeral from 'numeral';
 import 'chart.js/auto';
 import CommentSection from "./comment_section";
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function CTSanPham(props)
 {
-    
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [Count,setCount]=useState(1);
     const token = localStorage.getItem('token');
     const [danhGia, setDanhGia] = useState(props.data.danh_gia);
@@ -15,6 +20,9 @@ function CTSanPham(props)
     const [selectedDungLuong, setSelectedDungLuong] = useState(null);
     const [selectedMauSac, setSelectedMauSac] = useState(null);
     const [binhLuan,setBinhLuan]=useState([]);
+    const [soSao,setSoSao]=useState([]);
+    const [sumStar,setSumStar]=useState([]);
+
     useEffect(() => {
         
         if (props.data.chi_tiet_san_pham.length > 0) {
@@ -24,16 +32,35 @@ function CTSanPham(props)
             setSelectedDungLuong(defaultDungLuong);
             setSelectedMauSac(defaultMauSac);
             setTonKho(defaultTonKho);
+            
         }
 
     }, [props.data.chi_tiet_san_pham]);
+
+    useEffect(() => {
+
+        setSoSao(props.data.danh_gia);
+
+        
+        
+    }, [props.data.danh_gia]);
+       
+    const tongSoSao = () => {
+        let sum = 0;
+        soSao.forEach((item) => {
+            sum += item.so_sao;
+        });
+        setSumStar(sum);
+    };
 
     
     useEffect(() => {
             setBinhLuan(props.data.binh_luan);
     }, [props.data.binh_luan]);
 
-    
+   
+    //const AvgStar=parseFloat(sumStar)/parseInt(soSao.length)
+
     const handleMauSacClick = (mauSac) => {
         setSelectedMauSac(mauSac);
     
@@ -50,6 +77,7 @@ function CTSanPham(props)
     useEffect(() => {
         const danhGiaProps = props.data?.danh_gia || [];
         setDanhGia(danhGiaProps);
+        tongSoSao();
       }, [props.data]);
 
     const thongKeSoSao = () => {
@@ -113,17 +141,22 @@ function CTSanPham(props)
         alert('Thêm sản phẩm vào giỏ hàng thành công!');
     }
 
+    
 
     const renderThongKe = () => {
         const thongKe = thongKeSoSao();
     
         return (
           <>
-            <h3>Đánh giá:</h3>
+            <h3>Đánh giá {props.data.ten}</h3>
+            <div>
+            <span className="so-sao-sp">{parseFloat(sumStar/soSao.length).toFixed(1)}<FontAwesomeIcon icon={faStar} style={{ color: 'yellow' }} /></span>
+            <span className="so-luot-danh-gia">{soSao.length} đánh giá</span>
+            </div>
             <ul>
               {Object.keys(thongKe).map((sao) => (
                 <li key={sao}>
-                  {parseInt(sao,10)+1} sao: {thongKe[sao]} người đánh giá
+                  {parseInt(sao,10)+1} <FontAwesomeIcon style={{ color: 'yellow' }} icon={faStar} />: {thongKe[sao]} người đánh giá
                 </li>
               ))}
             </ul>
@@ -245,7 +278,44 @@ function CTSanPham(props)
             setCount(1);
         }
     };
-   
+    
+
+
+    const sliderSettings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />,
+        beforeChange: (current, next) => setSelectedImageIndex(next),
+    };
+
+    // Các hàm tùy chỉnh nút Next và Prev
+    function SampleNextArrow(props) {
+        const { className, style, onClick } = props;
+        return (
+            <div
+                className={className}
+                style={{ ...style, display: "block", background: "blue" }}
+                onClick={onClick}
+            />
+        );
+    }
+
+    function SamplePrevArrow(props) {
+        const { className, style, onClick } = props;
+        return (
+            <div
+                className={className}
+                style={{ ...style, display: "block", background: "green" }}
+                onClick={onClick}
+            />
+        );
+    }
+    
+
     return(
         
         <>
@@ -253,7 +323,20 @@ function CTSanPham(props)
         <Header/>
         
         <div className="chi-tiet">
-                <img src={`http://127.0.0.1:8000/${props.data.img[0]?.img_url}`} alt="hinh-anh" className="img-ct" />
+            <div className="img-ct">
+                <Slider {...sliderSettings}>
+                    {props.data.img.map((image, index) => (
+                        <img
+                            key={index}
+                            src={`http://127.0.0.1:8000/${image.img_url}`}
+                            alt={`hinh-anh-${index}`}
+                            className={`${selectedImageIndex === index ? 'selected' : ''}`}
+                            onClick={() => setSelectedImageIndex(index)}
+                        />
+                    ))}
+                </Slider>
+            </div>
+           
                 <p className="ct-ten-sp">{props.data.ten}</p>
 
                 {getUniqueDungLuongs(props.data.chi_tiet_san_pham).map((item) => (
@@ -309,6 +392,7 @@ function CTSanPham(props)
             <div className="parameter">
                
                 <div className="danh-gia">
+                
                 <div>{renderThongKe()}</div>
                     
                 </div>

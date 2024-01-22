@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
 import numeral from 'numeral';
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+
 function Product(props)
 {
     if (!numeral.locales['vi-custom']) {
@@ -18,8 +21,7 @@ function Product(props)
       
       //const count=console.log(props.member.chi_tiet_san_pham[0].gia_ban);
       
-        const so = parseFloat(props.member.chi_tiet_san_pham[0]?.gia_ban);
-        const soDaDinhDang = numeral(so).format('0,0');
+        
 
     const [selectedPriceMax, setSelectedPriceMax] = useState("");
     const [selectedPriceMin, setSelectedPriceMin] = useState("");
@@ -73,6 +75,7 @@ function Product(props)
                     <NavLink to={`/san-pham/${props.member.id}`} className="xem">
                         
                         <div className="detail-product">
+                            
                             <img src={`http://127.0.0.1:8000/${props.member.img[0]?.img_url}`} id="img-sp" /><br />
                             <span className="mo_ta">%{props.member.mo_ta}</span>
                             <h6 className="name">{props.member.ten}</h6>
@@ -89,6 +92,7 @@ function Product(props)
                             }
                         </div>
                     </NavLink>
+                    
                 </div>
             )}
         </>

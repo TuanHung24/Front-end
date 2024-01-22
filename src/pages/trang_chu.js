@@ -8,8 +8,12 @@ import axios from "axios";
 import ListBanner from "./list_banner";
 import { ToastContainer } from 'react-toastify';
 import Product from "../components/product";
+import PaginationProduct from "../components/pagination_product";
 
 function Trangchu() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage] = useState(10);
+
     const [dsLoaiSanPham, setDSLoaiSanPham] = useState([]);
     const [dsSanPham, setDSSanPham] = useState([]);
     const [priceRange, setPriceRange] = useState("");
@@ -46,7 +50,11 @@ function Trangchu() {
     const handleProductTypeChange = (event) => {
         setSelectedProductTypeId(event.target.value);
     };
-    
+
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = dsSanPham.slice(indexOfFirstProduct, indexOfLastProduct);
+
     return (
         <>
             <Header />
@@ -78,7 +86,7 @@ function Trangchu() {
                 </div>
 
                 <div id="list-product">
-                    {dsSanPham
+                    {currentProducts
                         .filter((item) => {
                             
                             if (priceRange) {
@@ -97,8 +105,15 @@ function Trangchu() {
                         .map((item) => (
                             <Product key={item.id} member={item} />
                         ))
+                        
                     }
                 </div>
+               <PaginationProduct
+                    currentPage={currentPage}
+                    productsPerPage={productsPerPage}
+                    totalProducts={dsSanPham.length}
+                    paginate={setCurrentPage}
+                />
             </body>
             <Footer />
         </>
