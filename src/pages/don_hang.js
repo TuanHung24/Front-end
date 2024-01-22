@@ -2,7 +2,7 @@ import Header from "../components/header";
 import Footer from "../components/footer";
 
 import withAuth from './withAuth';
-
+import { ToastContainer } from 'react-toastify';
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
@@ -159,7 +159,7 @@ function DonHang() {
             const key = `${orderId}_${productId}`;
             const userId = localStorage.getItem('id');
             const token = localStorage.getItem('token');
-            console.log("Đánh giá cho orderId", orderId, ":", ratings[key], "mã hd", productId);
+            
     
             const data = {
                 hoa_don_id: orderId,
@@ -300,7 +300,7 @@ function DonHang() {
                                                             <>
                                                                 <div className="stars">{renderStars(order.orderId, item.id)}</div>
                                                                 <button onClick={() => handleRatingSubmit(order.orderId, item.id)} className="btn btn-warning">Đánh giá</button>
-
+                                                                
                                                             </>
                                                         )}
                                                         
@@ -363,6 +363,9 @@ function DonHang() {
     }
     return (
         <>
+            <div>
+                <ToastContainer />
+            </div>
             <Header />
             {
 

@@ -1,7 +1,7 @@
 import SanPham from './product';
 function Products(props)
 {
-
+    
     const listSanPhams=props.member.san_pham.map(function(item)
     {
         return (

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify'; 
 import { ToastContainer } from 'react-toastify';
 
+
 function DangNhap() {
 
   const [email, setEmail] = useState('');
@@ -29,14 +30,7 @@ function DangNhap() {
       if (response.status === 200) {
         const Dt = await response.data;
         localStorage.setItem('token', Dt.access_token);
-        toast.success('Đăng nhập thành công!', {
-          position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-        });
+        alert("Đăng nhập thành công")
         navigate('/');
       } else {
         const data = await response.data;

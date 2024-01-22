@@ -1,4 +1,4 @@
-import { NavLink} from "react-router-dom";
+import { NavLink, useNavigate} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartShopping, faShoppingBag } from '@fortawesome/free-solid-svg-icons';
 import {faUser } from '@fortawesome/free-solid-svg-icons';
@@ -6,33 +6,29 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Products from "./products";
 
-
 function Header() {
 
   const [tenTaiKhoan, setTenTaiKhoan] = useState(localStorage.getItem('ten_tai_khoan')|| null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const navigate=useNavigate();
   const [dsSanPham, setDSSanPham] = useState([]);
+  const [sumCart,setSumCart]=useState();
+  const [sumOrder,setSumOrder]=useState();
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
-   
+    const userId = localStorage.getItem('id');
+    const cartItems = JSON.parse(localStorage.getItem(`cartItems_${userId}`)) || [];
+    const orderItems = JSON.parse(localStorage.getItem(`orderItems_${userId}`)) || [];
+    setSumCart(cartItems.length);
+    setSumOrder(orderItems.length);
     if (token) {
       setIsLoggedIn(true);
       axiosUserInfo(token);
     }
   }, []);
   
-  const handleSearch = async (searchTerm) => {
-    
-    try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/san-pham/tim-ten/${searchTerm}`);
-      console.log(response.data.data)
-      setDSSanPham(response.data.data);
-    } catch (error) {
-      console.error('Lỗi khi tìm kiếm:', error);
-    }
-  };
+  
+  
   
   const axiosUserInfo = async (token) => {
     axios({
@@ -68,7 +64,7 @@ function Header() {
       }
     })
     .then(response => {
-      alert(response.data.message);
+      
      
       localStorage.removeItem('token');
       localStorage.removeItem('ho_ten');
@@ -77,8 +73,9 @@ function Header() {
       localStorage.removeItem('email');
       localStorage.removeItem('dia_chi');
       localStorage.removeItem('ten_tai_khoan');
-      
       setIsLoggedIn(false); 
+      alert(response.data.message);
+      navigate('/dang-nhap')
 
       
     })
@@ -124,24 +121,14 @@ function Header() {
             </ul>
           </div>
         
-          <form className="col-12 col-lg-auto mb-3 mb-lg-0">
-          <input
-              type="search"
-              className="form-control form-control-dark"
-              placeholder="Search..."
-              aria-label="Search"
-              />
-            <button className="btn btn-outline-success my-2 my-sm-0" onClick={()=>handleSearch(searchTerm)}>
-              Search
-            </button>
-          </form>
+         
 
           <div className="login-out">
         {isLoggedIn ? (
           <>
             <FontAwesomeIcon icon={faUser} size="1x" className="ml-2"/>&nbsp;
             <span>Xin chào, <NavLink to="/info" className="info-name">{tenTaiKhoan}</NavLink></span>
-            <NavLink to="/dang-nhap" className="logout" onClick={logout}>Đăng xuất</NavLink>
+            <button className="logout" onClick={logout}>Đăng xuất</button>
           </>
         ) : (
           <>
@@ -156,11 +143,24 @@ function Header() {
           
             <NavLink className="text-reset me-3" to="/gio-hang">
               <FontAwesomeIcon icon={faCartShopping} size="2x" className="mr-4"/>
+              {sumCart && sumCart>0?(
+                  <span className="badge rounded-pill badge-notification bg-danger">{sumCart}</span>
+              ):(
+                <></>
+              )
+              }
+              
             </NavLink>
             
               <NavLink className="text-reset me-3" to='/don-hang'>
                 <FontAwesomeIcon icon={faShoppingBag} size="2x" className="ml-2"/>
-                <span className="badge rounded-pill badge-notification bg-danger">1</span>
+                {sumOrder && sumOrder>0 ?(
+                  <span className="badge rounded-pill badge-notification bg-danger">{sumOrder}</span>
+                ):(
+                  <></>
+                )
+                }
+                
               </NavLink>
                </div>
             </>
@@ -170,6 +170,12 @@ function Header() {
                 <div className="d-flex align-items-center">
                   <NavLink className="text-reset me-3" to="/gio-hang">
                     <FontAwesomeIcon icon={faCartShopping} size="2x" className="mr-4"/>
+                    {sumCart && sumCart>0?(
+                  <span className="badge rounded-pill badge-notification bg-danger">{sumCart}</span>
+                  ):(
+                    <></>
+                  )
+                  }
                   </NavLink>
                 </div>
                   </>

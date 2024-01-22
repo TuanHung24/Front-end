@@ -6,18 +6,20 @@ import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ListBanner from "./list_banner";
-import { ToastContainer } from 'react-toastify';
+
 import Product from "../components/product";
 import PaginationProduct from "../components/pagination_product";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExclamationTriangle  } from "@fortawesome/free-solid-svg-icons";
 function Trangchu() {
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(10);
-
+    const [searchTerm, setSearchTerm] = useState("");
     const [dsLoaiSanPham, setDSLoaiSanPham] = useState([]);
     const [dsSanPham, setDSSanPham] = useState([]);
     const [priceRange, setPriceRange] = useState("");
     const [selectedProductTypeId, setSelectedProductTypeId] = useState("");
+    const [noResults, setNoResults] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,6 +40,7 @@ function Trangchu() {
                 setDSSanPham(responseSanPham.data.data);
             } catch (error) {
                 console.error('Error:', error.response ? error.response.data : error.message);
+
             }
         }
         fetchData();
@@ -51,22 +54,45 @@ function Trangchu() {
         setSelectedProductTypeId(event.target.value);
     };
 
-    const indexOfLastProduct = currentPage * productsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-    const currentProducts = dsSanPham.slice(indexOfFirstProduct, indexOfLastProduct);
+    const handleSearch = async () => {
+        try {
+            let response;
+            if (searchTerm.trim() === "") {
+                // Nếu không có giá trị tìm kiếm, lấy lại toàn bộ danh sách sản phẩm
+                response = await axios.get('http://127.0.0.1:8000/api/san-pham');
+            } else {
+                // Nếu có giá trị tìm kiếm, lấy danh sách sản phẩm theo từ khóa
+                response = await axios.get(`http://127.0.0.1:8000/api/san-pham/tim-ten/${searchTerm}`);
+            }
+            const data = response.data.data || [];
+            setNoResults(data.length === 0);
+
+            setDSSanPham(data);
+        } catch (error) {
+            console.error('Lỗi khi tìm kiếm:', error);
+            setNoResults(true);
+            setDSSanPham([]);
+        }
+    };
+
+      const indexOfLastProduct = currentPage * productsPerPage;
+      const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+     
+      const currentProducts = dsSanPham ? dsSanPham.slice(indexOfFirstProduct, indexOfLastProduct) : [];
+
+
+    
 
     return (
         <>
             <Header />
             <ListBanner />
-            <div>
-                <ToastContainer />
-            </div>
-
+            
+           
             <body id="body">
 
                 <div className="price-filter">
-                    <span>Chọn mốc giá:</span>{' '}
+                    <span className="span-moc-gia">Chọn mốc giá:</span>{' '}
                     <select value={priceRange} onChange={handlePriceChange} className="select-price">
                         <option value="">Tất cả</option>
                         <option value="0-2999999">Dưới 3 triệu</option>
@@ -76,17 +102,38 @@ function Trangchu() {
                         <option value="10000001-60000000">Trên 10 triệu</option>
                     </select>
                     {' '}
-                    <span>Chọn loại sản phẩm:</span>{' '}
+                    <span className="span-loai-sp">Chọn loại sản phẩm:</span>{' '}
                     <select value={selectedProductTypeId} onChange={handleProductTypeChange} className="select-price">
                         <option value="">Tất cả</option>
                         {dsLoaiSanPham.map((loaiSP) => (
                             <option key={loaiSP.id} value={loaiSP.id}>{loaiSP.ten}</option>
                         ))}
                     </select>
+
+                    <div className="col-12 col-lg-auto mb-3 mb-lg-0">
+                        <input
+                        type="search"
+                        className="form-control form-control-dark"
+                        placeholder="Tìm kiếm..."
+                        aria-label="Search"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <button className="btn btn-outline-success my-2 my-sm-0" onClick={handleSearch}>
+                        Tìm kiếm
+                        </button>
+                    </div>
+
                 </div>
 
                 <div id="list-product">
-                    {currentProducts
+                {noResults ? (
+                        <div className="khong-tim-thay">
+                            <FontAwesomeIcon icon={faExclamationTriangle} size="3x" />
+                            <p>Không có sản phẩm nào được tìm thấy.</p>
+                        </div>
+                    ) : (
+                    currentProducts && currentProducts
                         .filter((item) => {
                             
                             if (priceRange) {
@@ -106,7 +153,7 @@ function Trangchu() {
                             <Product key={item.id} member={item} />
                         ))
                         
-                    }
+                    )}
                 </div>
                <PaginationProduct
                     currentPage={currentPage}

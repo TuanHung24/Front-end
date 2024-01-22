@@ -24,6 +24,7 @@
   margin-left: 100px;
 }
 .stars{
+  font-size: 19px;
   margin-top: 6px;
   margin-right: 4px;
 }
@@ -177,7 +178,14 @@ img
   flex-wrap: wrap;
   margin-bottom: 20px;
 }
+.span-moc-gia,.span-loai-sp{
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-right: 5px;
+}
 .price-filter{
+  margin-top: 20px;
+  display: flex;
   margin-left: 12%;
   margin-bottom: 20px;
 }
@@ -288,8 +296,8 @@ body{
 }
 
 .form-control.form-control-dark{
-  margin-left: -300%;
-    width: 400%;
+ 
+    width: 500px;
 }
 .form-control.mb-4{
   width: 50%;
@@ -302,6 +310,13 @@ body{
   margin-left: 42%;
   width: 15%;
   height: 20%;
+}
+.svg-inline--fa.fa-triangle-exclamation {
+  width: 90%;
+  height: 20%;
+}
+.khong-tim-thay{
+  margin-left: 35%;
 }
 .quantity{
   display: flex;
@@ -319,9 +334,12 @@ body{
   width: 40px;
   height: 40px;
 }
+.navbar-nav.me-auto.mb-2.mb-lg-0{
+  margin-left: 200px;
+}
 .col-12.col-lg-auto.mb-3.mb-lg-0{
-  width: 11%;
   display: flex;
+  margin-left: 20px;
 }
 .login-out{
   margin:0px 150px 0px 20px;
@@ -633,7 +651,7 @@ body{
   margin-left: 5px;
 }
 .pagination{
-  margin-left: 50%;
+  margin-left: 40%;
 }
 #pagination-comment{
   margin-left: 23%;

@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import numeral from 'numeral';
 import withAuth from './withAuth';
+import { toast } from 'react-toastify'; 
+import { useNavigate } from 'react-router-dom';
 function ThanhToan() {
     const [cartItems,setCartItems]=useState([])
     const [HoTen,setHoTen]=useState([]);
@@ -14,7 +16,7 @@ function ThanhToan() {
     const hoTen=useRef()
     const dienThoai=useRef()
     const diaChi=useRef()
-    
+    const navigate=useNavigate()
 
     useEffect(()=>{
        
@@ -116,12 +118,28 @@ function ThanhToan() {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
-            alert(response.data.message);
-            thanhToanHander(response.data.order_id);
-            window.location.href = '/don-hang';
+
+            if (response.status === 200) {
+                toast.success('Đặt hàng thành công!', {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                  });
+                navigate('/don-hang');
+              } else {
+                toast.error('Đăng nhập thất bại!', {
+                  position: 'top-right',
+                  autoClose: 3000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                });
+              }
         } catch (error) {
-            // Xử lý lỗi tại đây
             console.error("Có lỗi xảy ra:", error);
             alert("Có lỗi khi gửi dữ liệu!");
         }
