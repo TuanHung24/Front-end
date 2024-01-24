@@ -119,7 +119,7 @@ function Trangchu() {
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button className="btn btn-outline-success my-2 my-sm-0" onClick={handleSearch}>
+                        <button className="btn btn-primary my-2 my-sm-0" onClick={handleSearch}>
                         Tìm kiếm
                         </button>
                     </div>

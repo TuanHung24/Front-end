@@ -68,26 +68,7 @@ function ThanhToan() {
         setTongTien(tong);
     }, [cartItems]);
 
-    const thanhToanHander = async (orderId) => {
-        const userId = localStorage.getItem('id');
-             // Thay thế bằng trường ID thực tế của hóa đơn
-            const savedOrderItems = localStorage.getItem(`orderItems_${userId}`);
-            let orderItems = savedOrderItems ? JSON.parse(savedOrderItems) : [];
-            
-            // Tạo một hóa đơn mới với các sản phẩm từ cartItems
-            const newOrder = {
-                orderId: orderId,
-                items: cartItems.map(item => ({ ...item, order_id: orderId }))
-            };
-            orderItems.push(newOrder);
-
-        
-            // Lưu danh sách đơn hàng đã cập nhật vào localStorage
-            localStorage.setItem(`orderItems_${userId}`, JSON.stringify(orderItems));
-
-            localStorage.removeItem(`cartItems_${userId}`);
-        setCartItems([]);
-    }
+   
     
     
     const testHandler = async () => {
@@ -128,6 +109,21 @@ function ThanhToan() {
                     pauseOnHover: true,
                     draggable: true,
                   });
+                  const userId = localStorage.getItem('id');
+                  const savedOrderItems = localStorage.getItem(`orderItems_${userId}`);
+                  let orderItems = savedOrderItems ? JSON.parse(savedOrderItems) : [];
+                  
+                  const newOrder = {
+                      orderId: response.data.orderId, // Giả sử orderId được trả về từ server
+                      items: cartItems
+                  };
+                  
+                  // Thêm đơn hàng mới vào danh sách đơn hàng hiện có
+                  orderItems.push(newOrder);
+      
+                  localStorage.setItem(`orderItems_${userId}`, JSON.stringify(orderItems));
+                  localStorage.removeItem(`cartItems_${userId}`);
+                  setCartItems([]);
                 navigate('/don-hang');
               } else {
                 toast.error('Đăng nhập thất bại!', {

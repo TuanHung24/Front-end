@@ -64,23 +64,36 @@ function Header() {
       }
     })
     .then(response => {
-      
-     
-      localStorage.removeItem('token');
-      localStorage.removeItem('ho_ten');
-      localStorage.removeItem('dien_thoai');
-      localStorage.removeItem('id');
-      localStorage.removeItem('email');
-      localStorage.removeItem('dia_chi');
-      localStorage.removeItem('ten_tai_khoan');
-      setIsLoggedIn(false); 
+      clearLocalStorage();
       alert(response.data.message);
       navigate('/dang-nhap')
+      
+      
+      
+      
 
       
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+      console.error('Error:', error);
+      clearLocalStorage();
+      navigate('/dang-nhap');
+    }
+    );
   };
+
+  const clearLocalStorage = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem('token');
+    localStorage.removeItem('ho_ten');
+    localStorage.removeItem('dien_thoai');
+    localStorage.removeItem('id');
+    localStorage.removeItem('email');
+    localStorage.removeItem('dia_chi');
+    localStorage.removeItem('ten_tai_khoan');
+   
+};
+
   console.log(isLoggedIn)
   return (
     <>

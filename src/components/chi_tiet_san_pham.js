@@ -58,8 +58,6 @@ function CTSanPham(props)
             setBinhLuan(props.data.binh_luan);
     }, [props.data.binh_luan]);
 
-   
-    //const AvgStar=parseFloat(sumStar)/parseInt(soSao.length)
 
     const handleMauSacClick = (mauSac) => {
         setSelectedMauSac(mauSac);
@@ -148,14 +146,14 @@ function CTSanPham(props)
     
         return (
           <>
-            <h3>Đánh giá {props.data.ten}</h3>
+            <h3 className="danh-gia-chi-tiet">Đánh giá {props.data.ten}</h3>
             <div>
             <span className="so-sao-sp">{parseFloat(sumStar/soSao.length).toFixed(1)}<FontAwesomeIcon icon={faStar} style={{ color: 'yellow' }} /></span>
             <span className="so-luot-danh-gia">{soSao.length} đánh giá</span>
             </div>
-            <ul>
+            <ul className="ul-danh-gia">
               {Object.keys(thongKe).map((sao) => (
-                <li key={sao}>
+                <li key={sao} className="li-danh-gia">
                   {parseInt(sao,10)+1} <FontAwesomeIcon style={{ color: 'yellow' }} icon={faStar} />: {thongKe[sao]} người đánh giá
                 </li>
               ))}
@@ -391,19 +389,11 @@ function CTSanPham(props)
             
             <div className="parameter">
                
-                <div className="danh-gia">
-                
-                <div>{renderThongKe()}</div>
-                    
+                <div className="danh-gia"> 
+                    <div>{renderThongKe()}</div>             
                 </div>
-                <div className="binh-luan col-md-8">
-                   
-                        
-                        {binhLuan && <CommentSection binhLuan={binhLuan} />}               
-                        
-                    
-                        
-                    
+                <div className="binh-luan col-md-8">                   
+                        {binhLuan && <CommentSection binhLuan={binhLuan} />}                   
                 </div>
                     <ul className="parameter__list">
                     <h5>Thông tin sản phẩm:</h5>

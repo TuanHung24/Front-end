@@ -193,7 +193,7 @@ img
   padding: 5px;
 }
 #list-product{
-  margin-left: 12%;
+  margin-left: 13%;
   display: flex;
   flex-wrap: wrap;
   margin-right: 10%;
@@ -385,19 +385,21 @@ body{
     line-height: 18px;
     margin-bottom: 5px;
     margin-top: 10px;
+    margin-left: 3%;
 }
 .pb-4{
   margin-top: 2%;
 }
 
 .name{
+  margin-left: 3%;
   margin-top: 6px;
   
 }
 
 #gioi_thieu{
-  width: 78%;
-  margin: 15px 11.5% 15px 10.5%;
+  width: 74%;
+  margin: 15px 11.5% 15px 12%;
   line-height: 35px;
 }
 .thanh_tien{
@@ -442,11 +444,12 @@ body{
   width: 190px;
 }
 .mo_ta{
+  margin-left: 3%;
   border-radius: 90px;
-    background: rgb(243, 71, 100);
-    padding: 0px 10px;
-    margin-top: -20px;
-    color: black;
+  background: rgb(243, 71, 100);
+  padding: 0px 10px;
+  margin-top: -20px;
+  color: black;
     
 }
 .dung_luong.selected {
@@ -457,9 +460,8 @@ body{
 }
 .dung_luong{
   padding: 7px 10px;
-  border: 1px solid;
+  border: 1px solid black;
   margin-right: 5px;
-  
 }
 .mau_sac{
   padding: 7px 10px;
@@ -493,10 +495,11 @@ body{
  
 }
 .parameter__list{
-  margin-top: -66.5%;
+  margin-top: -110.5%;
   border: 1px solid #ccc;
   border-radius: 5px;
   padding: 20px;
+  margin-bottom: 30%;
 }
 .parameter__list li:nth-child(odd) {
   background-color: #f5f5f5;
@@ -635,49 +638,176 @@ body{
   list-style: none;
   padding: 0;
 }
-.so-sao-sp{
-  font-size: 20px;
-  margin-left: 20px;
-  margin-right: 30px;
+
+
+
+.danh-gia-chi-tiet {
+  color: #343a40; 
+  font-size: 28px; 
+  font-weight: 600; 
+  margin-bottom: 25px; 
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); 
 }
-.so-luot-danh-gia{
-  font-size: 15px;
-  color: blue;
+
+/* Styling for the average star rating and number of reviews */
+.so-sao-sp, .so-luot-danh-gia {
+  display: inline-block;
+  margin-right: 15px; /* Spacing between elements */
+  vertical-align: middle; /* Align elements */
 }
-.comment-item {
-  border-bottom: 1px solid #eee;
+
+.so-sao-sp {
+  font-size: 40px; /* Larger font size for star rating */
+  color: red; /* Brighter yellow */
+}
+
+.so-luot-danh-gia {
+  font-size: 18px;
+  color: #6c757d; /* Subtle grey */
+  font-weight: 500; /* Semi-bold */
+}
+
+/* Styling for the individual star ratings list */
+.ul-danh-gia {
+  list-style: none;
+  padding: 0;
+  margin-top: 15px; /* Spacing from the previous section */
+}
+
+.li-danh-gia {
+  font-size: 18px;
+  color: #495057; /* Slightly darker grey for readability */
   margin-bottom: 10px;
-  padding-bottom: 10px;
-  margin-left: 5px;
+  background-color: #f8f9fa; /* Light background for each item */
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px; /* Padding inside the list item */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow for depth */
 }
+
+.li-danh-gia svg {
+  color: #ffdd57; /* Bright yellow stars */
+  margin-right: 8px;
+}
+
+.quen-mat-khau{
+  margin-left: 50%;
+}
+.quen-mk-dang-nhap{
+  margin-left: -40%;
+  margin-right: 30%;
+}
+.login-main{
+  margin-left: -28%;
+  margin-right: 20%;
+}
+
 .pagination{
-  margin-left: 40%;
-}
-#pagination-comment{
-  margin-left: 23%;
-}
-
-.comment-header {
   display: flex;
-  justify-content: space-between;
-  
-  font-size: 16px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  font-family: 'Arial', sans-serif;
 }
 
-.user-name {
+.pagination-1,
+.pagination-2 {
+  background-color: #007bff; /* Blue color */
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 5px;
+}
+
+.pagination-1:hover,
+.pagination-2:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Styling for the page information span */
+.so-trang-bl {
+  margin: 0 10px;
+  font-size: 16px;
+  color: #333;
+  background-color: #f8f9fa; /* Light gray background */
+  padding: 6px 10px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for disabled buttons */
+.pagination-1:disabled,
+.pagination-2:disabled {
+  background-color: #cccccc; /* Grey color for disabled state */
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+
+
+/* Styling for the pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+/* Styling for the '<<' button */
+.pagination-1 {
+  background-color: #4caf50; /* Green color */
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-1:hover {
+  background-color: #45a049; /* Darker shade on hover */
+}
+
+/* Styling for the '>>' button */
+.pagination-2 {
+  background-color: #4caf50; /* Green color */
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-2:hover {
+  background-color: #45a049; /* Darker shade on hover */
+}
+
+/* Styling for the page information span */
+.so-trang-bl {
+  margin: 0 15px;
+  font-size: 18px;
   font-weight: bold;
+  color: #333;
+  background-color: #fff; /* White background */
+  padding: 8px 12px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.comment-date {
-  margin-left: 10px;
+/* Styling for disabled buttons */
+.pagination-1:disabled,
+.pagination-2:disabled {
+  background-color: #ccc; /* Grey color for disabled state */
+  cursor: not-allowed;
 }
 
-.comment-text {
-  margin-top: 5px;
-  font-size: 16px;
-  margin-left: 5px;
-  
-}
+
 
 .comment-input {
   margin-top: 20px;
@@ -701,4 +831,55 @@ body{
   border: none;
   border-radius: 3px;
   cursor: pointer;
+}
+
+/* Base styles */
+.comment-item, .comment-item-1 {
+  list-style: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.comment-header, .comment-header-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.user-name, .user-name-1 {
+  font-weight: 600;
+  font-size: 16px;
+  color: #0275d8; /* Bootstrap primary color */
+}
+
+.comment-date, .comment-date-1 {
+  color: #6c757d; /* Bootstrap secondary text color */
+  font-size: 14px;
+}
+
+.comment-text, .comment-text-1 {
+  color: #495057; /* Bootstrap dark text color */
+  line-height: 1.5;
+}
+
+/* First-level comment styles */
+.comment-item {
+  background-color: #ffffff;
+}
+
+/* Second-level comment styles */
+.comment-item-1 {
+  background-color: #f8f9fa; /* Lighter background for nested comments */
+  margin-left: 30px;
+  border-left: 4px solid #0275d8; /* Accent border on the left */
+}
+
+/* Hover effect */
+.comment-item:hover, .comment-item-1:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-2px);
 }

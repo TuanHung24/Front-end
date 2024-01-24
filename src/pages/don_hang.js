@@ -72,6 +72,7 @@ function DonHang() {
 
                 if (response.status === 200) {
                     setStatusOrders(response.data.data);
+                    
                 }
             } catch (error) {
                 console.error("Có lỗi khi lấy trạng thái đơn hàng:", error);
@@ -240,7 +241,7 @@ function DonHang() {
         }
     };
 
-
+//console.log(statusOrders)
     const gioHangUI = () => {
         if (orderItems && orderItems.length > 0) {
             return orderItems.map((order, orderIndex) => {
@@ -248,7 +249,7 @@ function DonHang() {
                 if (statusOrders && statusOrders.length > 0) {
                     orderStatus = statusOrders.find(status => status.orderId === order.orderId);
                 }
-
+                
                 let tongTienDonHang = 0;
                 order.items.forEach(item => {
                     tongTienDonHang += item.gia_ban * item.so_luong;

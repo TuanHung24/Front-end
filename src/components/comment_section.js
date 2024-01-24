@@ -20,20 +20,30 @@ const CommentSection = ({ binhLuan }) => {
     <div className="comment-section">
       <h5>Bình luận:</h5>
       <ul className="comment-list">
-        {currentComments.map((item, index) => (
+        {currentComments.map((item, index) => (<>
           <li key={index} className="comment-item">
             <div className="comment-header">
-              <span className="user-name">{item.khach_hang.ten_dang_nhap}</span>
+              <span className="user-name">{item.khach_hang.ho_ten}</span>
               <span className="comment-date">{item.ngay_tao}</span>
             </div>
             <p className="comment-text">{item.noi_dung}</p>
           </li>
+
+          <li key={index} className="comment-item-1">
+          <div className="comment-header-1">
+            <span className="user-name-1">{item.chi_tiet_binh_luan.quan_tri.ho_ten}</span>
+            <span className="comment-date-1">{item.chi_tiet_binh_luan.ngay_tao}</span>
+          </div>
+          <p className="comment-text-1">{item.chi_tiet_binh_luan.noi_dung}</p>
+          </li>
+          </>
+
         ))}
       </ul>
       <div className="pagination" id="pagination-comment">
-        <button onClick={goToPreviousPage} disabled={currentPage === 1}>{'<<'}</button>
-        <span>Trang {currentPage} trên {totalPages}</span>
-        <button onClick={goToNextPage} disabled={currentPage === totalPages}>{'>>'}</button>
+        <button onClick={goToPreviousPage} disabled={currentPage === 1} className='pagination-1'>{'<<'}</button>
+        <span className='so-trang-bl'>Trang {currentPage} trên {totalPages}</span>
+        <button onClick={goToNextPage} disabled={currentPage === totalPages} className='pagination-2'>{'>>'}</button>
       </div>
     </div>
   );
